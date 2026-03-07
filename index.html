@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NaijaxNet — Free Browsing, Tech, News & Football</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#00E676"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="NaijaxNet"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<meta name="description" content="Free Browsing Cheats, Tech Tips, News, Football Gossips and Android Reviews - Nigeria Number 1 Tech Blog"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0B0C0F;--bg2:#13141A;--bg3:#1C1E27;--card:#22242F;--card2:#2A2D3A;
+  --green:#00E676;--green-dim:rgba(0,230,118,.12);--green-glow:rgba(0,230,118,.25);
+  --yellow:#FFD60A;--red:#FF453A;--blue:#0A84FF;--purple:#BF5AF2;--orange:#FF9F0A;
+  --white:#F5F6FA;--sub:#9B9EAD;--border:rgba(255,255,255,.06);
+  --font:'Plus Jakarta Sans',sans-serif;
+  --radius:16px;--radius-sm:10px;--radius-xs:7px;
+  --safe-bottom:env(safe-area-inset-bottom,16px);
+}
+
+html,body{height:100%;overflow:hidden}
+body{background:#1a1a2e;font-family:var(--font);display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+/* ── PHONE SHELL ── */
+.phone-shell{
+  width:390px;height:844px;
+  background:var(--bg);
+  border-radius:50px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 0 10px #1a1a2e,
+    0 0 0 12px #333,
+    0 40px 120px rgba(0,0,0,.7),
+    0 0 60px rgba(0,230,118,.08);
+  display:flex;flex-direction:column;
+}
+
+/* notch */
+.phone-shell::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:120px;height:34px;background:#000;border-radius:0 0 20px 20px;z-index:999;
+}
+
+/* STATUS BAR */
+.status-bar{
+  height:50px;padding:14px 28px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:10;
+}
+.status-time{font-size:15px;font-weight:700;color:var(--white)}
+.status-icons{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--white)}
+
+/* SCREENS CONTAINER */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  transform:translateX(30px);
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen.slide-left{transform:translateX(-30px)}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  height:calc(60px + var(--safe-bottom));
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px 0 0;
+  flex-shrink:0;
+  position:relative;z-index:10;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10px;font-weight:600;color:var(--sub);
+  cursor:pointer;padding:4px 16px;border-radius:12px;
+  transition:all .18s;user-select:none;
+  letter-spacing:.02em;
+}
+.nav-item .ni{font-size:20px;line-height:1;transition:transform .18s}
+.nav-item.active{color:var(--green)}
+.nav-item.active .ni{transform:scale(1.15)}
+.nav-item:active{transform:scale(.93)}
+
+/* ── COMMON COMPONENTS ── */
+.app-header{
+  padding:16px 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,12,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.header-logo{font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--white)}
+.header-logo span{color:var(--green)}
+.header-logo sup{color:var(--yellow);font-size:.5em;vertical-align:super}
+.header-actions{display:flex;gap:8px}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  cursor:pointer;border:1px solid var(--border);transition:all .15s;
+}
+.icon-btn:active{transform:scale(.9)}
+
+.section-pad{padding:0 16px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px}
+.sec-label{font-size:15px;font-weight:800;color:var(--white)}
+.sec-more{font-size:12px;font-weight:700;color:var(--green);opacity:.85}
+
+/* TAGS/CHIPS */
+.chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--sub);font-size:11px;font-weight:600;
+  padding:5px 11px;border-radius:50px;white-space:nowrap;cursor:pointer;
+  transition:all .15s;
+}
+.chip.active,.chip:active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+
+/* ══════════════════════════════
+   SCREEN 1 — HOME
+══════════════════════════════ */
+/* HERO BANNER */
+.hero-banner{
+  margin:12px 16px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#0d2010 0%,#143d1e 50%,#0a1a0d 100%);
+  padding:20px;overflow:hidden;position:relative;cursor:pointer;
+}
+.hero-banner::before{
+  content:'⚽';position:absolute;right:-10px;bottom:-15px;
+  font-size:90px;opacity:.12;transform:rotate(15deg);
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);
+  color:var(--green);font-size:10px;font-weight:700;letter-spacing:.08em;
+  padding:3px 9px;border-radius:50px;text-transform:uppercase;margin-bottom:10px;
+}
+.live-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:lp 1.5s infinite}
+@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,69,58,.5)}50%{opacity:.5;box-shadow:0 0 0 4px rgba(255,69,58,0)}}
+.hero-title{font-size:17px;font-weight:800;line-height:1.3;color:var(--white);margin-bottom:8px}
+.hero-meta{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:14px}
+.hero-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--green);color:#000;font-size:12px;font-weight:700;
+  padding:7px 14px;border-radius:8px;border:none;cursor:pointer;
+}
+
+/* CATEGORIES SCROLL */
+.cats-scroll{
+  display:flex;gap:8px;overflow-x:auto;padding:4px 16px 4px;
+  scrollbar-width:none;
+}
+.cats-scroll::-webkit-scrollbar{display:none}
+.cat-pill{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:68px;background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:10px 8px;cursor:pointer;transition:all .18s;flex-shrink:0;
+}
+.cat-pill.active,.cat-pill:active{background:var(--green-dim);border-color:var(--green)}
+.cat-pill .cp-icon{font-size:22px}
+.cat-pill .cp-name{font-size:10px;font-weight:700;color:var(--sub);white-space:nowrap}
+.cat-pill.active .cp-name{color:var(--green)}
+
+/* POST CARDS */
+.posts-scroll{
+  display:flex;gap:12px;overflow-x:auto;padding:4px 16px 8px;
+  scrollbar-width:none;
+}
+.posts-scroll::-webkit-scrollbar{display:none}
+.post-h-card{
+  min-width:200px;max-width:200px;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.post-h-card:active{transform:scale(.97)}
+.phc-thumb{
+  width:100%;height:110px;background:linear-gradient(135deg,var(--bg2),var(--bg3));
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  position:relative;
+}
+.phc-badge{
+  position:absolute;top:7px;left:7px;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:4px;color:#000;
+}
+.badge-hot{background:var(--red);color:white}
+.badge-new{background:var(--blue);color:white}
+.badge-guide{background:var(--green)}
+.badge-break{background:var(--orange);color:white}
+.phc-body{padding:10px}
+.phc-cat{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.phc-title{font-size:12px;font-weight:700;line-height:1.35;color:var(--white);margin-bottom:6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.phc-meta{font-size:10px;color:var(--sub)}
+
+/* VERTICAL POST LIST */
+.post-v-list{padding:0 16px;display:flex;flex-direction:column;gap:10px}
+.post-v-item{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:12px;display:flex;gap:12px;cursor:pointer;transition:all .18s;
+}
+.post-v-item:active{transform:scale(.98);background:var(--card2)}
+.pvi-icon{
+  width:56px;height:56px;min-width:56px;border-radius:12px;
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.pvi-body{flex:1;min-width:0}
+.pvi-cat{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px}
+.pvi-title{font-size:13px;font-weight:700;line-height:1.35;color:var(--white);margin-bottom:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pvi-meta{font-size:10px;color:var(--sub)}
+.pvi-arrow{align-self:center;font-size:14px;color:var(--sub)}
+
+/* CHEAT CARDS */
+.cheat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.cheat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:12px;cursor:pointer;transition:all .18s;
+}
+.cheat-card:active{transform:scale(.96)}
+.cc-net{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.cc-badge{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.mtn{background:#FFC107;color:#000}.airtel{background:#E53935;color:white}
+.glo{background:#2E7D32;color:white}.nine{background:#9C27B0;color:white}
+.cc-net-name{font-size:11px;font-weight:700;color:var(--white)}
+.cc-title{font-size:11px;font-weight:600;line-height:1.4;color:var(--sub);margin-bottom:7px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cc-status{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700}
+.sdot{width:6px;height:6px;border-radius:50%}
+.sdot-ok{background:var(--green);box-shadow:0 0 5px var(--green)}.sdot-test{background:var(--yellow)}.sdot-dead{background:var(--red)}
+.stxt-ok{color:var(--green)}.stxt-test{color:var(--yellow)}.stxt-dead{color:var(--red)}
+
+/* ══════════════════════════════
+   SCREEN 2 — SEARCH
+══════════════════════════════ */
+.search-screen-header{padding:16px 16px 12px}
+.search-input-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:11px 14px;transition:border-color .2s;
+}
+.search-input-wrap:focus-within{border-color:var(--green)}
+.search-input-wrap .si{font-size:16px;color:var(--sub)}
+.search-input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--white);font-family:var(--font);font-size:14px;
+}
+.search-input::placeholder{color:var(--sub)}
+.search-clear{font-size:14px;color:var(--sub);cursor:pointer;padding:2px}
+
+.trending-searches{padding:8px 16px 16px}
+.ts-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.ts-chips{display:flex;flex-wrap:wrap;gap:7px}
+
+.search-results{padding:0 16px;display:none;flex-direction:column;gap:10px}
+.search-results.show{display:flex}
+
+/* ══════════════════════════════
+   SCREEN 3 — FOOTBALL
+══════════════════════════════ */
+.match-card-full{
+  margin:0 16px 12px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;
+}
+.match-card-full:active{transform:scale(.98)}
+.mcf-league{
+  background:linear-gradient(90deg,rgba(0,230,118,.1),transparent);
+  padding:8px 14px;font-size:10px;font-weight:700;color:var(--green);
+  letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--border);
+}
+.mcf-body{padding:16px}
+.mcf-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.mcf-team{text-align:center;flex:1}
+.mcf-emoji{font-size:32px;display:block;margin-bottom:4px}
+.mcf-name{font-size:12px;font-weight:700;color:var(--white)}
+.mcf-score{
+  background:var(--bg3);border-radius:10px;padding:8px 14px;
+  font-size:22px;font-weight:800;color:var(--white);text-align:center;
+  min-width:70px;border:1px solid var(--border);
+}
+.mcf-title{font-size:13px;font-weight:700;color:var(--white);line-height:1.4;margin-bottom:4px}
+.mcf-sub{font-size:11px;color:var(--sub)}
+
+/* ══════════════════════════════
+   SCREEN 4 — FREE CHEATS
+══════════════════════════════ */
+.network-tabs{
+  display:flex;gap:6px;overflow-x:auto;padding:8px 16px;
+  scrollbar-width:none;
+}
+.network-tabs::-webkit-scrollbar{display:none}
+.ntab{
+  display:flex;align-items:center;gap:5px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--sub);font-size:11px;font-weight:700;
+  padding:6px 12px;border-radius:50px;white-space:nowrap;cursor:pointer;
+  transition:all .15s;flex-shrink:0;
+}
+.ntab.active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.ntab .nb{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+
+.cheat-full-card{
+  margin:0 16px 10px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .18s;
+}
+.cheat-full-card:active{transform:scale(.98);background:var(--card2)}
+.cfc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cfc-net-badge{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.cfc-info{flex:1}
+.cfc-net-name{font-size:12px;font-weight:700;color:var(--white)}
+.cfc-type{font-size:10px;color:var(--sub)}
+.cfc-title{font-size:13px;font-weight:700;color:var(--white);line-height:1.4;margin-bottom:8px}
+.cfc-footer{display:flex;align-items:center;justify-content:space-between}
+.cfc-status{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.cfc-btn{background:var(--green);color:#000;font-size:10px;font-weight:700;padding:5px 11px;border-radius:6px;border:none;cursor:pointer}
+
+/* ══════════════════════════════
+   SCREEN 5 — PROFILE / MORE
+══════════════════════════════ */
+.profile-hero{
+  margin:12px 16px;background:linear-gradient(135deg,#0d1a0d,#142814);
+  border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:20px;
+  display:flex;align-items:center;gap:14px;
+}
+.profile-avatar{
+  width:60px;height:60px;border-radius:18px;
+  background:linear-gradient(135deg,var(--green),#00b856);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  flex-shrink:0;box-shadow:0 4px 20px var(--green-glow);
+}
+.profile-name{font-size:17px;font-weight:800;color:var(--white)}
+.profile-sub{font-size:12px;color:var(--sub);margin-top:2px}
+.profile-badge{
+  margin-top:8px;display:inline-flex;align-items:center;gap:4px;
+  background:var(--green-dim);border:1px solid rgba(0,230,118,.3);
+  color:var(--green);font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px;
+}
+
+.menu-group{margin:0 16px 8px}
+.menu-group-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;padding:12px 0 6px}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:6px;
+  cursor:pointer;transition:all .15s;
+}
+.menu-item:active{background:var(--card2);transform:scale(.98)}
+.mi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mi-text{flex:1}
+.mi-label{font-size:13px;font-weight:700;color:var(--white)}
+.mi-sub{font-size:11px;color:var(--sub);margin-top:1px}
+.mi-arrow{font-size:12px;color:var(--sub)}
+.mi-badge{background:var(--red);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:50px}
+
+/* PLAY STORE BANNER */
+.playstore-banner{
+  margin:8px 16px 16px;
+  background:linear-gradient(135deg,#0a1628,#142440);
+  border:1px solid rgba(10,132,255,.2);border-radius:var(--radius);
+  padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.psb-icon{font-size:32px;flex-shrink:0}
+.psb-text{}
+.psb-title{font-size:13px;font-weight:700;color:var(--white)}
+.psb-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.psb-btn{margin-top:8px;display:inline-block;background:var(--blue);color:white;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px}
+
+/* ── SPLASH SCREEN ── */
+.splash{
+  position:absolute;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:1000;transition:opacity .5s ease;
+}
+.splash-logo{font-size:42px;font-weight:800;color:var(--white);letter-spacing:-.04em;margin-bottom:6px}
+.splash-logo span{color:var(--green)}
+.splash-logo sup{color:var(--yellow);font-size:.4em;vertical-align:super}
+.splash-tagline{font-size:13px;color:var(--sub);margin-bottom:40px}
+.splash-loader{width:48px;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.splash-progress{height:100%;background:var(--green);border-radius:4px;animation:load 2s ease forwards}
+@keyframes load{0%{width:0}100%{width:100%}}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .35s ease both}
+.fu1{animation-delay:.05s}.fu2{animation-delay:.1s}.fu3{animation-delay:.15s}.fu4{animation-delay:.2s}
+
+/* OUTER PAGE */
+.outer{min-height:100vh;background:linear-gradient(135deg,#0f0f1a 0%,#1a0f2e 50%,#0f1a0f 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+.device-label{color:rgba(255,255,255,.3);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.preview-note{
+  background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.15);
+  border-radius:12px;padding:14px 20px;max-width:390px;width:100%;
+  color:rgba(255,255,255,.6);font-family:var(--font);font-size:12px;line-height:1.6;
+}
+.preview-note strong{color:var(--green)}
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="device-label">NaijaxNet App — Redesigned UI</div>
+
+  <div class="phone-shell">
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <div class="status-time" id="clock">9:41</div>
+      <div class="status-icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- SCREENS -->
+    <div class="screens">
+
+      <!-- ═══ HOME SCREEN ═══ -->
+      <div class="screen active" id="screen-home">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('search')">🔍</div>
+            <div class="icon-btn">🔔</div>
+          </div>
+        </div>
+
+        <!-- HERO -->
+        <div class="hero-banner fu" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/chelseas-stunning-comeback-aston-villa.html')">
+          <div class="hero-tag"><span class="live-dot"></span> Breaking</div>
+          <div class="hero-title">Chelsea 4-1 Aston Villa — Joao Pedro Hat-Trick!</div>
+          <div class="hero-meta">Whyteman Harrison · Mar 4, 2026 · Premier League</div>
+          <button class="hero-btn">Read Full Story →</button>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="sec-row"><div class="sec-label">Categories</div><div class="sec-more" onclick="switchScreen('cheats')">See All</div></div>
+        <div class="cats-scroll">
+          <div class="cat-pill active" onclick="switchScreen('home')"><div class="cp-icon">🏠</div><div class="cp-name">Home</div></div>
+          <div class="cat-pill" onclick="switchScreen('cheats')"><div class="cp-icon">📶</div><div class="cp-name">Cheats</div></div>
+          <div class="cat-pill" onclick="switchScreen('football')"><div class="cp-icon">⚽</div><div class="cp-name">Football</div></div>
+          <div class="cat-pill" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Games')"><div class="cp-icon">🎮</div><div class="cp-name">Games</div></div>
+          <div class="cat-pill" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Tech%20News')"><div class="cp-icon">💻</div><div class="cp-name">Tech</div></div>
+          <div class="cat-pill" onclick="openLink('https://naijaxnet.blogspot.com/search/label/News')"><div class="cp-icon">📰</div><div class="cp-name">News</div></div>
+          <div class="cat-pill" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Tutorial')"><div class="cp-icon">🎓</div><div class="cp-name">Tutorials</div></div>
+          <div class="cat-pill" onclick="openLink('https://naijaxnet.blogspot.com/search/label/ENTERTAINMENT')"><div class="cp-icon">🎬</div><div class="cp-name">Entertainment</div></div>
+        </div>
+
+        <!-- HOT POSTS HORIZONTAL SCROLL -->
+        <div class="sec-row"><div class="sec-label">🔥 Hot Right Now</div><div class="sec-more" onclick="openLink('https://naijaxnet.blogspot.com/')">More</div></div>
+        <div class="posts-scroll">
+          <div class="post-h-card" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/efootball-2026-mod-apk-v1030-accuracy.html')">
+            <div class="phc-thumb">⚽<span class="phc-badge badge-new">NEW</span></div>
+            <div class="phc-body"><div class="phc-cat">🎮 Android Games</div><div class="phc-title">eFootball 2026 MOD APK v10.3.0 Download</div><div class="phc-meta">Mar 3 · 2.5GB</div></div>
+          </div>
+          <div class="post-h-card" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/fifa-2026-on-android-download-setup-and.html')">
+            <div class="phc-thumb">🏆<span class="phc-badge badge-guide">GUIDE</span></div>
+            <div class="phc-body"><div class="phc-cat">🎮 Game Reviews</div><div class="phc-title">FIFA 2026 on Android: Download & Setup Guide</div><div class="phc-meta">Mar 2 · Full Setup</div></div>
+          </div>
+          <div class="post-h-card" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/iranian-state-media-just-confirmed.html')">
+            <div class="phc-thumb">🌍<span class="phc-badge badge-break">BREAKING</span></div>
+            <div class="phc-body"><div class="phc-cat">📰 Foreign News</div><div class="phc-title">Iranian State Media Confirms: Khamenei Is Dead</div><div class="phc-meta">Mar 1 · Breaking</div></div>
+          </div>
+          <div class="post-h-card" onclick="openLink('https://naijaxnet.blogspot.com/2018/10/eproxy-settings-2018-2019-for-mtn-00k.html')">
+            <div class="phc-thumb">📶<span class="phc-badge badge-guide">HOT</span></div>
+            <div class="phc-body"><div class="phc-cat">📶 MTN Nigeria</div><div class="phc-title">KPN VPN Settings For MTN 0.0k — Full Guide</div><div class="phc-meta">Updated 2026</div></div>
+          </div>
+        </div>
+
+        <!-- LATEST POSTS -->
+        <div class="sec-row"><div class="sec-label">Latest Posts</div><div class="sec-more" onclick="openLink('https://naijaxnet.blogspot.com/')">All Posts</div></div>
+        <div class="post-v-list">
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/arsenal-2-1-chelsea-set-piece-mastery.html')">
+            <div class="pvi-icon">🔴</div>
+            <div class="pvi-body"><div class="pvi-cat">⚽ Football</div><div class="pvi-title">Arsenal 2-1 Chelsea: Set-Piece Mastery Secures Vital London Derby Win</div><div class="pvi-meta">Mar 1, 2026 · Premier League</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/2026/02/world-in-chaos-trump-announces.html')">
+            <div class="pvi-icon">🇺🇸</div>
+            <div class="pvi-body"><div class="pvi-cat">📰 Breaking News</div><div class="pvi-title">Trump Announces Ayatollah Khamenei Has Been KILLED</div><div class="pvi-meta">Feb 28, 2026 · 2 comments</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Android%20Reviews')">
+            <div class="pvi-icon">📱</div>
+            <div class="pvi-body"><div class="pvi-cat">📱 Android Reviews</div><div class="pvi-title">Browse All Android Phone & App Reviews — 19+ Posts</div><div class="pvi-meta">Updated Regularly</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Blogging%20Tips')">
+            <div class="pvi-icon">📈</div>
+            <div class="pvi-body"><div class="pvi-cat">💡 Blogging Tips</div><div class="pvi-title">Top Secrets In Ranking #1 On Google Search Engine</div><div class="pvi-meta">SEO Guide · Must Read</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- FREE CHEATS PREVIEW -->
+        <div class="sec-row"><div class="sec-label">📶 Free Browsing Cheats</div><div class="sec-more" onclick="switchScreen('cheats')">All Cheats</div></div>
+        <div class="cheat-grid">
+          <div class="cheat-card" onclick="openLink('https://naijaxnet.blogspot.com/2018/10/eproxy-settings-2018-2019-for-mtn-00k.html')">
+            <div class="cc-net"><div class="cc-badge mtn">MTN</div><div class="cc-net-name">MTN Nigeria</div></div>
+            <div class="cc-title">KPN VPN Settings For MTN 0.0k</div>
+            <div class="cc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working</span></div>
+          </div>
+          <div class="cheat-card" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Glo%20Nigeria')">
+            <div class="cc-net"><div class="cc-badge glo">GLO</div><div class="cc-net-name">Glo Nigeria</div></div>
+            <div class="cc-title">Glo Free Browsing HTTP Injector Config</div>
+            <div class="cc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working</span></div>
+          </div>
+          <div class="cheat-card" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Airtel%20Nigeria')">
+            <div class="cc-net"><div class="cc-badge airtel">AIR</div><div class="cc-net-name">Airtel Nigeria</div></div>
+            <div class="cc-title">Airtel Night Plan & Data Tweaks 2026</div>
+            <div class="cc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div>
+          </div>
+          <div class="cheat-card" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Etisalat%20Nigeria')">
+            <div class="cc-net"><div class="cc-badge nine">9MB</div><div class="cc-net-name">9Mobile</div></div>
+            <div class="cc-title">9Mobile VPN & Psiphon Settings</div>
+            <div class="cc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div>
+          </div>
+        </div>
+
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- ═══ SEARCH SCREEN ═══ -->
+      <div class="screen" id="screen-search">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+
+        <div class="search-screen-header">
+          <div class="search-input-wrap">
+            <span class="si">🔍</span>
+            <input class="search-input" id="searchField" type="text" placeholder="Search cheats, tech, football..." oninput="handleSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
+            <span class="search-clear" onclick="clearSearch()">✕</span>
+          </div>
+        </div>
+
+        <div class="trending-searches">
+          <div class="ts-title">🔥 Trending Searches</div>
+          <div class="ts-chips">
+            <span class="chip" onclick="quickSearch('MTN free browsing')">📶 MTN Free Browsing</span>
+            <span class="chip" onclick="quickSearch('eFootball 2026 MOD')">⚽ eFootball 2026</span>
+            <span class="chip" onclick="quickSearch('Chelsea')">🔵 Chelsea</span>
+            <span class="chip" onclick="quickSearch('KPN VPN')">🔐 KPN VPN</span>
+            <span class="chip" onclick="quickSearch('FIFA 2026')">🏆 FIFA 2026</span>
+            <span class="chip" onclick="quickSearch('Airtel cheat')">🔴 Airtel Cheat</span>
+            <span class="chip" onclick="quickSearch('Android review')">📱 Android Review</span>
+            <span class="chip" onclick="quickSearch('Arsenal')">🔴 Arsenal</span>
+          </div>
+        </div>
+
+        <div class="search-results" id="searchResults">
+          <!-- Dynamic results rendered by JS -->
+        </div>
+
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- ═══ FOOTBALL SCREEN ═══ -->
+      <div class="screen" id="screen-football">
+        <div class="app-header">
+          <div class="header-logo">⚽ Football</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Football')">🔗</div>
+          </div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Recent Results</div></div>
+
+        <div class="match-card-full" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/chelseas-stunning-comeback-aston-villa.html')">
+          <div class="mcf-league">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League · Mar 4, 2026</div>
+          <div class="mcf-body">
+            <div class="mcf-teams">
+              <div class="mcf-team"><span class="mcf-emoji">🟣</span><div class="mcf-name">Aston Villa</div></div>
+              <div class="mcf-score">1–4</div>
+              <div class="mcf-team"><span class="mcf-emoji">🔵</span><div class="mcf-name">Chelsea</div></div>
+            </div>
+            <div class="mcf-title">Joao Pedro Hat-Trick Seals Stunning Chelsea Comeback at Villa Park</div>
+            <div class="mcf-sub">Pedro 35', 45+6', 64' · Palmer 55' | Douglas Luiz 2'</div>
+          </div>
+        </div>
+
+        <div class="match-card-full" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/arsenal-2-1-chelsea-set-piece-mastery.html')">
+          <div class="mcf-league">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League · Mar 1, 2026</div>
+          <div class="mcf-body">
+            <div class="mcf-teams">
+              <div class="mcf-team"><span class="mcf-emoji">🔴</span><div class="mcf-name">Arsenal</div></div>
+              <div class="mcf-score">2–1</div>
+              <div class="mcf-team"><span class="mcf-emoji">🔵</span><div class="mcf-name">Chelsea</div></div>
+            </div>
+            <div class="mcf-title">Set-Piece Mastery Secures Vital London Derby Win for the Gunners</div>
+            <div class="mcf-sub">Saliba 21' · Timber 66' | Own Goal 45+2'</div>
+          </div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">📱 Football Games</div><div class="sec-more" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Games')">More</div></div>
+        <div class="post-v-list" style="padding-bottom:12px">
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/efootball-2026-mod-apk-v1030-accuracy.html')">
+            <div class="pvi-icon" style="background:linear-gradient(135deg,#1a3a1a,#2d7a2d)">⚽</div>
+            <div class="pvi-body"><div class="pvi-cat">🎮 MOD APK</div><div class="pvi-title">eFootball 2026 MOD APK v10.3.0 — Mega Hit + Accuracy Angle</div><div class="pvi-meta">Mar 3, 2026 · 2.5GB Download</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/2026/03/fifa-2026-on-android-download-setup-and.html')">
+            <div class="pvi-icon" style="background:linear-gradient(135deg,#1a1a3a,#2d2d7a)">🏆</div>
+            <div class="pvi-body"><div class="pvi-cat">🎮 Game Guide</div><div class="pvi-title">FIFA 2026 on Android: Download, Setup & Play Guide</div><div class="pvi-meta">Mar 2, 2026 · EA Sports FC Mobile</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+          <div class="post-v-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Game%20Reviews')">
+            <div class="pvi-icon" style="background:linear-gradient(135deg,#3a1a1a,#7a2d2d)">🕹️</div>
+            <div class="pvi-body"><div class="pvi-cat">🕹️ Game Reviews</div><div class="pvi-title">Browse All 7+ Game Reviews on NaijaxNet</div><div class="pvi-meta">MODs, APKs, Setup Guides</div></div>
+            <div class="pvi-arrow">›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ FREE CHEATS SCREEN ═══ -->
+      <div class="screen" id="screen-cheats">
+        <div class="app-header">
+          <div class="header-logo">📶 Free Cheats</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Free%20Browsing%20Cheats')">🔗</div>
+          </div>
+        </div>
+
+        <div class="network-tabs">
+          <div class="ntab active" id="ntab-all" onclick="filterNet('all',this)">🌐 All Networks</div>
+          <div class="ntab" id="ntab-mtn" onclick="filterNet('mtn',this)"><div class="nb mtn">M</div>MTN</div>
+          <div class="ntab" id="ntab-airtel" onclick="filterNet('airtel',this)"><div class="nb airtel" style="color:white">A</div>Airtel</div>
+          <div class="ntab" id="ntab-glo" onclick="filterNet('glo',this)"><div class="nb glo" style="color:white">G</div>Glo</div>
+          <div class="ntab" id="ntab-nine" onclick="filterNet('nine',this)"><div class="nb nine" style="color:white">9</div>9Mobile</div>
+        </div>
+
+        <div id="cheats-list" style="padding-bottom:16px">
+          <div class="cheat-full-card" data-net="mtn" onclick="openLink('https://naijaxnet.blogspot.com/2018/10/eproxy-settings-2018-2019-for-mtn-00k.html')">
+            <div class="cfc-header"><div class="cfc-net-badge mtn">MTN</div><div class="cfc-info"><div class="cfc-net-name">MTN Nigeria</div><div class="cfc-type">HTTP Injector · KPN VPN · Eproxy</div></div></div>
+            <div class="cfc-title">KPN VPN Settings For MTN 0.0k — HTTP Injector, Eproxy & Psiphon XP 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="mtn" onclick="openLink('https://naijaxnet.blogspot.com/2018/11/how-to-browse-absolutely-anonymous-with.html')">
+            <div class="cfc-header"><div class="cfc-net-badge mtn">MTN</div><div class="cfc-info"><div class="cfc-net-name">MTN Nigeria</div><div class="cfc-type">mPulse · Data Tweak</div></div></div>
+            <div class="cfc-title">How To Tweak MTN mPulse Data To Power All Apps Anonymously</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="mtn" onclick="openLink('https://naijaxnet.blogspot.com/2017/08/how-to-activate-mtn-50gb-in-ghana-for.html')">
+            <div class="cfc-header"><div class="cfc-net-badge mtn">MTN</div><div class="cfc-info"><div class="cfc-net-name">MTN Ghana</div><div class="cfc-type">Data Plan · 50GB</div></div></div>
+            <div class="cfc-title">How To Activate MTN 50GB In Ghana For 6 Months — Cheapest Plan</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="airtel" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Airtel%20Nigeria')">
+            <div class="cfc-header"><div class="cfc-net-badge airtel">AIR</div><div class="cfc-info"><div class="cfc-net-name">Airtel Nigeria</div><div class="cfc-type">Night Plan · Data Tweak</div></div></div>
+            <div class="cfc-title">Latest Airtel Free Browsing Cheats — Night Plan & VPN Data Tweaks 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="glo" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Glo%20Nigeria')">
+            <div class="cfc-header"><div class="cfc-net-badge glo">GLO</div><div class="cfc-info"><div class="cfc-net-name">Glo Nigeria</div><div class="cfc-type">HTTP Injector · Config Files</div></div></div>
+            <div class="cfc-title">Glo Free Browsing Cheats — Latest HTTP Injector Config Files 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="glo" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Glo%20Nigeria')">
+            <div class="cfc-header"><div class="cfc-net-badge glo">GLO</div><div class="cfc-info"><div class="cfc-net-name">Glo Nigeria</div><div class="cfc-type">VPN Tweak · Psiphon</div></div></div>
+            <div class="cfc-title">Glo Free Browsing VPN Tweaks — Psiphon & HTTP Injector Settings</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="nine" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Etisalat%20Nigeria')">
+            <div class="cfc-header"><div class="cfc-net-badge nine">9MB</div><div class="cfc-info"><div class="cfc-net-name">9Mobile Nigeria</div><div class="cfc-type">VPN · Psiphon · Config</div></div></div>
+            <div class="cfc-title">9Mobile Free Browsing Cheats — VPN & Psiphon Settings That Work 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ MORE / PROFILE SCREEN ═══ -->
+      <div class="screen" id="screen-more">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+        </div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar">🇳🇬</div>
+          <div>
+            <div class="profile-name">NaijaxNet</div>
+            <div class="profile-sub">Free Browsing · Tech · News · Football</div>
+            <div class="profile-badge">✅ Trusted Since 2017</div>
+          </div>
+        </div>
+
+        <!-- PLAY STORE -->
+        <div class="playstore-banner" onclick="openLink('https://play.google.com/store/apps/details?id=com.naijaxnet.blog')">
+          <div class="psb-icon">📱</div>
+          <div class="psb-text">
+            <div class="psb-title">NaijaxNet Android App</div>
+            <div class="psb-sub">Available on Google Play Store — Install now for free</div>
+            <div class="psb-btn">Open on Play Store →</div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">📶 Free Cheats</div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/MTN%20Nigeria')"><div class="mi-icon" style="background:rgba(255,193,7,.15)">🟡</div><div class="mi-text"><div class="mi-label">MTN Nigeria Cheats</div><div class="mi-sub">4 posts · Updated 2026</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Airtel%20Nigeria')"><div class="mi-icon" style="background:rgba(229,57,53,.15)">🔴</div><div class="mi-text"><div class="mi-label">Airtel Nigeria Cheats</div><div class="mi-sub">3 posts · Updated</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Glo%20Nigeria')"><div class="mi-icon" style="background:rgba(46,125,50,.15)">🟢</div><div class="mi-text"><div class="mi-label">Glo Nigeria Cheats</div><div class="mi-sub">5 posts · Working</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Etisalat%20Nigeria')"><div class="mi-icon" style="background:rgba(156,39,176,.15)">🟣</div><div class="mi-text"><div class="mi-label">9Mobile Cheats</div><div class="mi-sub">3 posts · Testing</div></div><div class="mi-arrow">›</div></div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">📱 Android & Games</div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Android%20Reviews')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">📱</div><div class="mi-text"><div class="mi-label">Android Reviews</div><div class="mi-sub">19 posts</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Games')"><div class="mi-icon" style="background:rgba(191,90,242,.15)">🎮</div><div class="mi-text"><div class="mi-label">Games & MODs</div><div class="mi-sub">17 posts</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/GB%20WhatsApp')"><div class="mi-icon" style="background:rgba(46,125,50,.15)">💬</div><div class="mi-text"><div class="mi-label">GB WhatsApp</div><div class="mi-sub">Latest version</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/search/label/Apple%20Review')"><div class="mi-icon" style="background:rgba(255,255,255,.08)">🍎</div><div class="mi-text"><div class="mi-label">Apple Reviews</div><div class="mi-sub">iPhone & iPad</div></div><div class="mi-arrow">›</div></div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">📋 Pages & Info</div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/blog-page.html')"><div class="mi-icon" style="background:rgba(0,230,118,.12)">ℹ️</div><div class="mi-text"><div class="mi-label">About Us</div><div class="mi-sub">Learn about NaijaxNet</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/contact-us.html')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">📞</div><div class="mi-text"><div class="mi-label">Contact Us</div><div class="mi-sub">+234 803 828 0548</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/advertise.html')"><div class="mi-icon" style="background:rgba(255,159,10,.15)">💼</div><div class="mi-text"><div class="mi-label">Advertise With Us</div><div class="mi-sub">Promote your brand</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/the-look-and-feel-of-your-blog.html')"><div class="mi-icon" style="background:rgba(191,90,242,.15)">🎨</div><div class="mi-text"><div class="mi-label">Hire Us</div><div class="mi-sub">Blog design service</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/guest-post.html')"><div class="mi-icon" style="background:rgba(0,230,118,.1)">✍️</div><div class="mi-text"><div class="mi-label">Guest Post</div><div class="mi-sub">Write for NaijaxNet</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://t.me/naijaxnet')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">✈️</div><div class="mi-text"><div class="mi-label">Telegram Group</div><div class="mi-sub">@naijaxnet</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/privacy-policy.html')"><div class="mi-icon" style="background:rgba(255,255,255,.06)">🔒</div><div class="mi-text"><div class="mi-label">Privacy Policy</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="openLink('https://naijaxnet.blogspot.com/p/sitemap.html')"><div class="mi-icon" style="background:rgba(255,255,255,.06)">🗺️</div><div class="mi-text"><div class="mi-label">Sitemap</div></div><div class="mi-arrow">›</div></div>
+        </div>
+
+        <div style="text-align:center;padding:12px 0 20px;font-size:11px;color:var(--sub)">
+          NaijaxNet v3.0 · Made in Nigeria 🇳🇬<br>
+          <span style="color:var(--green)">naijaxnet.blogspot.com</span>
+        </div>
+      </div>
+
+    </div><!-- /screens -->
+
+    <!-- ═══ POST READER (full screen overlay) ═══ -->
+    <div id="post-reader" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div id="post-reader-bar" style="position:sticky;top:0;z-index:2;height:54px;background:rgba(11,12,15,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 12px;">
+        <div onclick="closePost()" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;">&#8592;</div>
+        <div style="flex:1;font-size:13px;font-weight:700;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="post-reader-title-bar">NaijaxNet</div>
+        <div id="post-share-btn" onclick="sharePost()" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;">&#x1F4E4;</div>
+      </div>
+      <div id="post-reader-body" style="padding:0 0 40px;"></div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+      <div class="nav-item active" id="nav-home" onclick="switchScreen('home')">
+        <div class="ni">🏠</div>Home
+      </div>
+      <div class="nav-item" id="nav-cheats" onclick="switchScreen('cheats')">
+        <div class="ni">📶</div>Cheats
+      </div>
+      <div class="nav-item" id="nav-football" onclick="switchScreen('football')">
+        <div class="ni">⚽</div>Football
+      </div>
+      <div class="nav-item" id="nav-search" onclick="switchScreen('search')">
+        <div class="ni">🔍</div>Search
+      </div>
+      <div class="nav-item" id="nav-more" onclick="switchScreen('more')">
+        <div class="ni">☰</div>More
+      </div>
+    </div>
+  </div><!-- /phone-shell -->
+
+  <div class="preview-note">
+    <strong>✅ Redesigned NaijaxNet App UI</strong> — Full interactive mobile prototype with 5 screens: Home, Free Cheats (filterable by network), Football, Search, and More. All links open your real blog. Use as reference for your developer or WebView app builder.
+  </div>
+</div>
+
+<script>
+// Clock
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent=n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+}
+updateClock();setInterval(updateClock,10000);
+
+
+// Screen switching
+let current='home';
+function switchScreen(name){
+  const prev=document.getElementById('screen-'+current);
+  const next=document.getElementById('screen-'+name);
+  if(!next||current===name)return;
+  prev.classList.remove('active');
+  prev.classList.add('slide-left');
+  next.classList.add('active');
+  next.scrollTop=0;
+  setTimeout(()=>prev.classList.remove('slide-left'),300);
+  // update nav
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  const ni=document.getElementById('nav-'+name);
+  if(ni)ni.classList.add('active');
+  current=name;
+}
+
+var _currentPostUrl = '';
+
+function openLink(url) {
+  if (!url) return;
+  // Play Store / Telegram → external
+  if (url.indexOf('play.google') > -1 || url.indexOf('t.me') > -1) { window.open(url,'_blank'); return; }
+  // Homepage → go to home screen
+  if (url === 'https://naijaxnet.blogspot.com/' || url === 'https://naijaxnet.blogspot.com') { switchScreen('home'); return; }
+  // Label pages → open label reader in-app
+  if (url.indexOf('/search/label/') > -1) { openLabelReader(url); return; }
+  // Static pages (/p/) → open in browser
+  if (url.indexOf('/p/') > -1) { window.open(url,'_blank'); return; }
+  // Blog posts → open post reader in-app
+  if (url.indexOf('blogspot.com') > -1 && url.indexOf('.html') > -1) { openPostReader(url); return; }
+  // Anything else → external
+  window.open(url,'_blank');
+}
+
+function openPostReader(url) {
+  _currentPostUrl = url;
+  var reader   = document.getElementById('post-reader');
+  var body     = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+
+  body.innerHTML =
+    '<div style="padding:80px 20px;text-align:center;">' +
+      '<div style="width:40px;height:40px;border:3px solid #1C1E27;border-top-color:#00E676;border-radius:50%;margin:0 auto 16px;animation:nxnSpin 0.8s linear infinite;"></div>' +
+      '<div style="color:#9B9EAD;font-size:14px;">Loading post...</div>' +
+    '</div>' +
+    '<style>@keyframes nxnSpin{to{transform:rotate(360deg)}}</style>';
+  titleBar.textContent = 'Loading...';
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  // Clean up any previous JSONP script
+  var old = document.getElementById('nxn-jsonp');
+  if (old) old.remove();
+
+  // Use Blogger native JSONP - works cross-domain, no proxy needed
+  // Search the feed for this specific post URL
+  window._nxnCB = function(data) {
+    try {
+      var entries = data.feed.entry;
+      if (!entries || entries.length === 0) { showPostError(url); return; }
+      // Find the exact post by matching its alternate link
+      var entry = entries[0];
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].link) {
+          for (var j = 0; j < entries[i].link.length; j++) {
+            if (entries[i].link[j].rel === 'alternate' && entries[i].link[j].href === url) {
+              entry = entries[i]; break;
+            }
+          }
+        }
+      }
+      renderPost(entry, url);
+    } catch(e) { showPostError(url); }
+  };
+
+  // Extract post slug keywords from URL for search query
+  var slug = url.split('/').pop().replace('.html','').replace(/-/g,' ').substring(0, 40);
+  var feedUrl = 'https://naijaxnet.blogspot.com/feeds/posts/default' +
+    '?alt=json-in-script&max-results=1&q=' + encodeURIComponent(slug) +
+    '&callback=_nxnCB';
+
+  var sc = document.createElement('script');
+  sc.id  = 'nxn-jsonp';
+  sc.src = feedUrl;
+  sc.onerror = function() { showPostError(url); };
+  document.head.appendChild(sc);
+
+  // Timeout fallback
+  setTimeout(function(){
+    var b = document.getElementById('post-reader-body');
+    if (b && b.innerHTML.indexOf('nxnSpin') > -1) showPostError(url);
+  }, 12000);
+}
+
+function renderPost(entry, url) {
+  var body      = document.getElementById('post-reader-body');
+  var titleBar  = document.getElementById('post-reader-title-bar');
+
+  // Extract fields
+  var title   = entry.title ? entry.title.$t : 'Untitled';
+  var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
+  var date    = '';
+  if (entry.published) {
+    var d = new Date(entry.published.$t);
+    date = d.toLocaleDateString('en-NG', {day:'numeric',month:'long',year:'numeric'});
+  }
+  var author = '';
+  if (entry.author && entry.author[0]) author = entry.author[0].name.$t;
+
+  var labels = [];
+  if (entry.category) {
+    entry.category.forEach(function(c){ labels.push(c.term); });
+  }
+
+  // Thumbnail (first image in content)
+  var thumbMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+  var thumb = thumbMatch ? thumbMatch[1] : '';
+
+  titleBar.textContent = title;
+
+  var labelsHtml = labels.map(function(l) {
+    return '<span style="background:var(--bg3);border:1px solid var(--border);color:var(--sub);font-size:11px;font-weight:600;padding:4px 10px;border-radius:50px;display:inline-block;margin:0 4px 6px 0;">🏷 '+l+'</span>';
+  }).join('');
+
+  body.innerHTML =
+    // Hero image
+    (thumb ? '<img src="'+thumb+'" style="width:100%;max-height:220px;object-fit:cover;display:block;" onerror="this.style.display=\'none\'">' : '') +
+
+    // Post title
+    '<div style="padding:18px 16px 6px;">' +
+      '<h1 style="font-family:var(--font);font-size:21px;font-weight:800;color:var(--white);line-height:1.3;letter-spacing:-.02em;margin:0;">'+title+'</h1>' +
+    '</div>' +
+
+    // Meta row
+    '<div style="padding:6px 16px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:4px;">' +
+      (author ? '<span style="font-size:12px;font-weight:700;color:var(--green);">✍️ '+author+'</span><span style="color:var(--border)">·</span>' : '') +
+      '<span style="font-size:12px;color:var(--sub);">'+date+'</span>' +
+    '</div>' +
+
+    // Labels
+    (labelsHtml ? '<div style="padding:10px 16px 4px;">'+labelsHtml+'</div>' : '') +
+
+    // Post content
+    '<div id="nxn-post-content" style="padding:12px 16px 24px;font-family:var(--font);font-size:15px;line-height:1.85;color:rgba(245,246,250,.87);">'+content+'</div>' +
+
+    // Author card
+    '<div style="margin:0 16px 24px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;">' +
+      '<div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00b894);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">👤</div>' +
+      '<div>' +
+        '<div style="font-size:14px;font-weight:800;color:var(--white);">Whyteman Harrison</div>' +
+        '<div style="font-size:12px;color:var(--sub);margin-top:2px;">Admin · NaijaxNet Blog</div>' +
+        '<div style="font-size:11px;color:var(--green);margin-top:3px;font-weight:600;">Free Browsing · Tech · News · Football 🇳🇬</div>' +
+      '</div>' +
+    '</div>' +
+
+    // Comments prompt
+    '<div style="margin:0 16px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center;">' +
+      '<div style="font-size:22px;margin-bottom:8px;">💬</div>' +
+      '<div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:6px;">Join the Conversation</div>' +
+      '<div style="font-size:12px;color:var(--sub);margin-bottom:14px;">Comments are on the full post page</div>' +
+      '<button onclick="window.open(\''+url+'\',\'_blank\')" style="background:var(--green);color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-family:var(--font);">View Comments →</button>' +
+    '</div>' +
+
+    '<div style="height:20px;"></div>';
+
+  // Fix all images inside content
+  setTimeout(function() {
+    var pc = document.getElementById('nxn-post-content');
+    if (!pc) return;
+    // Style all elements
+    var imgs = pc.querySelectorAll('img');
+    imgs.forEach(function(img){
+      img.style.cssText = 'max-width:100%!important;height:auto!important;border-radius:12px!important;margin:12px 0!important;display:block!important;';
+    });
+    var links = pc.querySelectorAll('a');
+    links.forEach(function(a){
+      a.style.cssText = 'color:#00E676!important;font-weight:600!important;text-decoration:none!important;word-break:break-word!important;';
+    });
+    var paras = pc.querySelectorAll('p,span,div,li');
+    paras.forEach(function(el){
+      if (!el.querySelector('img') && !el.querySelector('a')) {
+        el.style.color = 'rgba(245,246,250,.87)';
+      }
+      el.style.fontFamily = 'var(--font)';
+      el.style.background = 'transparent';
+    });
+    var heads = pc.querySelectorAll('h1,h2,h3,h4,h5');
+    heads.forEach(function(h){
+      h.style.cssText = 'color:#F5F6FA!important;font-weight:800!important;margin:20px 0 8px!important;font-family:var(--font)!important;';
+    });
+    var tables = pc.querySelectorAll('table');
+    tables.forEach(function(t){
+      t.style.cssText = 'width:100%!important;border-collapse:collapse!important;background:#22242F!important;border-radius:12px!important;overflow:hidden!important;margin:14px 0!important;font-size:13px!important;';
+    });
+    var tds = pc.querySelectorAll('td,th');
+    tds.forEach(function(td){
+      td.style.cssText = 'padding:10px 12px!important;border-bottom:1px solid rgba(255,255,255,.07)!important;color:#F5F6FA!important;';
+    });
+  }, 100);
+}
+
+function showPostError(url) {
+  var body = document.getElementById('post-reader-body');
+  body.innerHTML =
+    '<div style="padding:60px 20px;text-align:center;">' +
+      '<div style="font-size:48px;margin-bottom:16px;">😕</div>' +
+      '<div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px;">Couldn\'t load post</div>' +
+      '<div style="font-size:13px;color:var(--sub);margin-bottom:24px;">Check your connection and try again</div>' +
+      '<button onclick="window.open(\''+url+'\',\'_blank\')" style="background:var(--green);color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;margin-right:10px;">Open in Browser</button>' +
+      '<button onclick="closePost()" style="background:var(--bg3);color:var(--white);font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;">Go Back</button>' +
+    '</div>';
+}
+
+
+// ═══ LABEL READER ═══
+function openLabelReader(url) {
+  var label = decodeURIComponent((url.split('/search/label/')[1] || '').split('?')[0]).replace(/\+/g,' ');
+  var reader   = document.getElementById('post-reader');
+  var body     = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+
+  body.innerHTML =
+    '<div style="padding:80px 20px;text-align:center;">' +
+      '<div style="width:40px;height:40px;border:3px solid #1C1E27;border-top-color:#00E676;border-radius:50%;margin:0 auto 16px;animation:nxnSpin 0.8s linear infinite;"></div>' +
+      '<div style="color:#9B9EAD;font-size:14px;">Loading ' + label + '...</div>' +
+    '</div>' +
+    '<style>@keyframes nxnSpin{to{transform:rotate(360deg)}}</style>';
+  titleBar.textContent = '🏷 ' + label;
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  var old = document.getElementById('nxn-jsonp');
+  if (old) old.remove();
+
+  window._nxnCB = function(data) {
+    try {
+      var entries = data.feed.entry;
+      if (!entries || entries.length === 0) {
+        body.innerHTML = '<div style="padding:60px 20px;text-align:center;"><div style="font-size:48px;margin-bottom:16px;">📭</div><div style="font-size:16px;font-weight:700;color:#F5F6FA;margin-bottom:8px;">No posts found</div><div style="font-size:13px;color:#9B9EAD;">for label: ' + label + '</div></div>';
+        return;
+      }
+      renderLabelList(entries, label, url);
+    } catch(e) {
+      body.innerHTML = '<div style="padding:60px 20px;text-align:center;"><div style="font-size:48px;margin-bottom:16px;">😕</div><div style="font-size:16px;font-weight:700;color:#F5F6FA;margin-bottom:8px;">Couldn't load posts</div><div style="font-size:13px;color:#9B9EAD;margin-bottom:24px;">Check your connection</div><button onclick="openLabelReader(\''+url+'\')" style="background:#00E676;color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;">Retry</button></div>';
+    }
+  };
+
+  var sc = document.createElement('script');
+  sc.id  = 'nxn-jsonp';
+  sc.src = 'https://naijaxnet.blogspot.com/feeds/posts/default/-/' + encodeURIComponent(label) +
+           '?alt=json-in-script&max-results=20&orderby=published&callback=_nxnCB';
+  sc.onerror = function() {
+    body.innerHTML = '<div style="padding:60px 20px;text-align:center;"><div style="font-size:48px;">😕</div><div style="font-size:16px;font-weight:700;color:#F5F6FA;margin:16px 0 8px;">Failed to load</div><button onclick="openLabelReader(\''+url+'\')" style="background:#00E676;color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;">Retry</button></div>';
+  };
+  document.head.appendChild(sc);
+
+  setTimeout(function(){
+    var b = document.getElementById('post-reader-body');
+    if (b && b.innerHTML.indexOf('nxnSpin') > -1) {
+      b.innerHTML = '<div style="padding:60px 20px;text-align:center;"><div style="font-size:48px;">⏱</div><div style="font-size:16px;font-weight:700;color:#F5F6FA;margin:16px 0 8px;">Taking too long</div><button onclick="openLabelReader(\''+url+'\')" style="background:#00E676;color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;">Retry</button></div>';
+    }
+  }, 12000);
+}
+
+function renderLabelList(entries, label, labelUrl) {
+  var body = document.getElementById('post-reader-body');
+  var total = entries.length;
+
+  var html = '<div style="padding:12px 16px 6px;display:flex;align-items:center;justify-content:space-between;">' +
+    '<div style="font-size:13px;color:#9B9EAD;">' + total + ' post' + (total !== 1 ? 's' : '') + ' in this category</div>' +
+  '</div>';
+
+  for (var i = 0; i < entries.length; i++) {
+    var e = entries[i];
+    var title = e.title ? e.title.$t : 'Untitled';
+    var date  = '';
+    if (e.published) {
+      var d = new Date(e.published.$t);
+      date = d.toLocaleDateString('en-NG', {day:'numeric', month:'short', year:'numeric'});
+    }
+    var postUrl = '';
+    if (e.link) {
+      for (var j = 0; j < e.link.length; j++) {
+        if (e.link[j].rel === 'alternate') { postUrl = e.link[j].href; break; }
+      }
+    }
+    var content = e.content ? e.content.$t : (e.summary ? e.summary.$t : '');
+    var imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+    var thumb = imgMatch ? imgMatch[1] : '';
+
+    // Snippet text (strip HTML)
+    var snippet = content.replace(/<[^>]+>/g, '').substring(0, 90).trim();
+    if (snippet.length === 90) snippet += '…';
+
+    html += '<div onclick="openPostReader('' + postUrl.replace(/'/g, "\'") + '')" style="display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;active-background:#1C1E27;">' +
+      (thumb ?
+        '<img src="' + thumb + '" style="width:76px;height:76px;border-radius:10px;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">' :
+        '<div style="width:76px;height:76px;border-radius:10px;background:#1C1E27;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;">📄</div>') +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:14px;font-weight:700;color:#F5F6FA;line-height:1.35;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + title + '</div>' +
+        (snippet ? '<div style="font-size:12px;color:#9B9EAD;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px;">' + snippet + '</div>' : '') +
+        '<div style="font-size:11px;color:#5a5d70;">' + date + '</div>' +
+      '</div>' +
+      '<div style="color:#9B9EAD;font-size:16px;flex-shrink:0;align-self:center;">›</div>' +
+    '</div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function closePost() {
+  document.getElementById('post-reader').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function sharePost() {
+  if (navigator.share && _currentPostUrl) {
+    navigator.share({ title: document.getElementById('post-reader-title-bar').textContent, url: _currentPostUrl });
+  } else if (_currentPostUrl) {
+    window.open(_currentPostUrl, '_blank');
+  }
+}
+
+// Network filter on cheats screen
+function filterNet(net,el){
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.cheat-full-card').forEach(c=>{
+    if(net==='all'||c.dataset.net===net){c.style.display='block'}
+    else{c.style.display='none'}
+  });
+}
+
+// Search
+const searchData=[
+  {title:'KPN VPN Settings For MTN 0.0k',cat:'📶 MTN Nigeria',url:'https://naijaxnet.blogspot.com/2018/10/eproxy-settings-2018-2019-for-mtn-00k.html'},
+  {title:'eFootball 2026 MOD APK v10.3.0 Download',cat:'🎮 Android Games',url:'https://naijaxnet.blogspot.com/2026/03/efootball-2026-mod-apk-v1030-accuracy.html'},
+  {title:'FIFA 2026 on Android: Download & Setup',cat:'🎮 Game Reviews',url:'https://naijaxnet.blogspot.com/2026/03/fifa-2026-on-android-download-setup-and.html'},
+  {title:'Chelsea 4-1 Aston Villa — Joao Pedro Hat-Trick',cat:'⚽ Football',url:'https://naijaxnet.blogspot.com/2026/03/chelseas-stunning-comeback-aston-villa.html'},
+  {title:'Arsenal 2-1 Chelsea London Derby',cat:'⚽ Football',url:'https://naijaxnet.blogspot.com/2026/03/arsenal-2-1-chelsea-set-piece-mastery.html'},
+  {title:'MTN mPulse Data Tweak For All Apps',cat:'📶 MTN Nigeria',url:'https://naijaxnet.blogspot.com/2018/11/how-to-browse-absolutely-anonymous-with.html'},
+  {title:'Glo Free Browsing HTTP Injector Config',cat:'📶 Glo Nigeria',url:'https://naijaxnet.blogspot.com/search/label/Glo%20Nigeria'},
+  {title:'Airtel Night Plan Free Browsing 2026',cat:'📶 Airtel Nigeria',url:'https://naijaxnet.blogspot.com/search/label/Airtel%20Nigeria'},
+  {title:'9Mobile Free Browsing VPN Settings',cat:'📶 9Mobile',url:'https://naijaxnet.blogspot.com/search/label/Etisalat%20Nigeria'},
+  {title:'Top Secrets In Ranking #1 On Google',cat:'💡 Blogging Tips',url:'https://naijaxnet.blogspot.com/search/label/Blogging%20Tips'},
+  {title:'GB WhatsApp Latest Version Download',cat:'📱 Android App',url:'https://naijaxnet.blogspot.com/search/label/GB%20WhatsApp'},
+  {title:'How To Activate MTN 50GB Ghana',cat:'📶 MTN Ghana',url:'https://naijaxnet.blogspot.com/2017/08/how-to-activate-mtn-50gb-in-ghana-for.html'},
+];
+
+function handleSearch(v){
+  const res=document.getElementById('searchResults');
+  if(!v.trim()){res.classList.remove('show');res.innerHTML='';return}
+  const filtered=searchData.filter(d=>d.title.toLowerCase().includes(v.toLowerCase())||d.cat.toLowerCase().includes(v.toLowerCase()));
+  if(filtered.length===0){res.innerHTML='<div style="padding:20px;text-align:center;color:var(--sub);font-size:13px">No results found. <a href="https://naijaxnet.blogspot.com/search?q='+encodeURIComponent(v)+'" target="_blank" style="color:var(--green)">Search on blog →</a></div>';res.classList.add('show');return}
+  res.innerHTML=filtered.map(d=>`<div class="post-v-item" onclick="openLink('${d.url}')"><div class="pvi-icon">🔍</div><div class="pvi-body"><div class="pvi-cat">${d.cat}</div><div class="pvi-title">${d.title}</div></div><div class="pvi-arrow">›</div></div>`).join('');
+  res.classList.add('show');
+}
+
+function quickSearch(term){
+  document.getElementById('searchField').value=term;
+  handleSearch(term);
+  openSearchResults(term);
+}
+function clearSearch(){
+  document.getElementById('searchField').value='';
+  document.getElementById('searchResults').classList.remove('show');
+  document.getElementById('searchResults').innerHTML='';
+}
+function doSearch(){
+  const q=document.getElementById('searchField').value.trim();
+  if(!q) return;
+  // Show results in-app via JSONP
+  openSearchResults(q);
+}
+
+function openSearchResults(q) {
+  var reader   = document.getElementById('post-reader');
+  var body     = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+
+  body.innerHTML =
+    '<div style="padding:80px 20px;text-align:center;">' +
+      '<div style="width:40px;height:40px;border:3px solid #1C1E27;border-top-color:#00E676;border-radius:50%;margin:0 auto 16px;animation:nxnSpin 0.8s linear infinite;"></div>' +
+      '<div style="color:#9B9EAD;font-size:14px;">Searching for &ldquo;' + q + '&rdquo;...</div>' +
+    '</div>' +
+    '<style>@keyframes nxnSpin{to{transform:rotate(360deg)}}</style>';
+  titleBar.textContent = '🔍 ' + q;
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  var old = document.getElementById('nxn-jsonp');
+  if (old) old.remove();
+
+  window._nxnCB = function(data) {
+    try {
+      var entries = data.feed.entry;
+      if (!entries || entries.length === 0) {
+        body.innerHTML = '<div style="padding:60px 20px;text-align:center;">' +
+          '<div style="font-size:48px;margin-bottom:16px;">🔍</div>' +
+          '<div style="font-size:16px;font-weight:700;color:#F5F6FA;margin-bottom:8px;">No results for &ldquo;' + q + '&rdquo;</div>' +
+          '<div style="font-size:13px;color:#9B9EAD;margin-bottom:20px;">Try different keywords</div>' +
+          '<button onclick="window.open('https://naijaxnet.blogspot.com/search?q=' + encodeURIComponent(q) + '','_blank')" style="background:#00E676;color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;">Search on Blog →</button>' +
+        '</div>';
+        return;
+      }
+      renderLabelList(entries, 'Results for: ' + q, '');
+    } catch(e) {
+      body.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#9B9EAD;">Search error. <button onclick="window.open('https://naijaxnet.blogspot.com/search?q=' + encodeURIComponent(q) + '','_blank')" style="background:#00E676;color:#000;padding:8px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Try on Blog →</button></div>';
+    }
+  };
+
+  var sc = document.createElement('script');
+  sc.id  = 'nxn-jsonp';
+  sc.src = 'https://naijaxnet.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=10&q=' + encodeURIComponent(q) + '&callback=_nxnCB';
+  document.head.appendChild(sc);
+
+  setTimeout(function(){
+    var b = document.getElementById('post-reader-body');
+    if (b && b.innerHTML.indexOf('nxnSpin') > -1) {
+      b.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#9B9EAD;">Search timed out. <button onclick="window.open('https://naijaxnet.blogspot.com/search?q=' + encodeURIComponent(q) + '','_blank')" style="background:#00E676;color:#000;padding:8px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Try on Blog →</button></div>';
+    }
+  }, 12000);
+}
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();})}).catch(function(){});
+  });
+}
+var _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();_deferredPrompt=e;
+  setTimeout(_showNxnBanner,4000);
+});
+function _showNxnBanner(){
+  if(localStorage.getItem('nxn-installed'))return;
+  if(document.getElementById('nxn-pwa-banner'))return;
+  var b=document.createElement('div');
+  b.id='nxn-pwa-banner';
+  b.style.cssText='position:fixed;bottom:80px;left:12px;right:12px;z-index:99999;background:linear-gradient(135deg,#0d2010,#143d1e);border:1px solid rgba(0,230,118,.35);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 40px rgba(0,0,0,.6);font-family:var(--font);animation:fadeUp .4s ease';
+  b.innerHTML='<span style="font-size:28px">📱</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#F5F6FA">Install NaijaxNet App</div><div style="font-size:11px;color:#9B9EAD;margin-top:2px">Add to home screen for instant access</div></div><button onclick="_doInstall()" style="background:#00E676;color:#000;font-size:12px;font-weight:700;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;white-space:nowrap;font-family:var(--font)">Install</button><button onclick="_dismissBanner()" style="background:none;border:none;color:#9B9EAD;font-size:18px;cursor:pointer;padding:4px">✕</button>';
+  document.body.appendChild(b);
+}
+function _doInstall(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted'){localStorage.setItem('nxn-installed','1');var b=document.getElementById('nxn-pwa-banner');if(b)b.remove();}
+      _deferredPrompt=null;
+    });
+  }else{alert('On iPhone: tap the Share icon then "Add to Home Screen"');}
+}
+function _dismissBanner(){var b=document.getElementById('nxn-pwa-banner');if(b)b.remove();}
+if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.navigator.standalone&&!localStorage.getItem('nxn-installed')){
+  setTimeout(_showNxnBanner,5000);
+}
+</script>
+</body>
+</html>
