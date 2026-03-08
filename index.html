@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NaijaxNet — Free Browsing, Tech, News & Football</title>
+<link rel="manifest" href="https://whyteman91.github.io/Naijaxnet-App/manifest.json"/>
+<meta name="theme-color" content="#00E676"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="NaijaxNet"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<meta name="description" content="Free Browsing Cheats, Tech Tips, News, Football Gossips and Android Reviews - Nigeria Number 1 Tech Blog"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0B0C0F;--bg2:#13141A;--bg3:#1C1E27;--card:#22242F;--card2:#2A2D3A;
+  --green:#00E676;--green-dim:rgba(0,230,118,.12);--green-glow:rgba(0,230,118,.25);
+  --yellow:#FFD60A;--red:#FF453A;--blue:#0A84FF;--purple:#BF5AF2;--orange:#FF9F0A;
+  --white:#F5F6FA;--sub:#9B9EAD;--border:rgba(255,255,255,.06);
+  --font:'Plus Jakarta Sans',sans-serif;
+  --radius:16px;--radius-sm:10px;--radius-xs:7px;
+  --safe-bottom:env(safe-area-inset-bottom,16px);
+}
+
+html,body{height:100%;overflow:hidden}
+body{background:#1a1a2e;font-family:var(--font);display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+/* ── PHONE SHELL ── */
+.phone-shell{
+  width:390px;height:844px;
+  background:var(--bg);
+  border-radius:50px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 0 10px #1a1a2e,
+    0 0 0 12px #333,
+    0 40px 120px rgba(0,0,0,.7),
+    0 0 60px rgba(0,230,118,.08);
+  display:flex;flex-direction:column;
+}
+
+/* notch */
+.phone-shell::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:120px;height:34px;background:#000;border-radius:0 0 20px 20px;z-index:999;
+}
+
+/* STATUS BAR */
+.status-bar{
+  height:50px;padding:14px 28px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:10;
+}
+.status-time{font-size:15px;font-weight:700;color:var(--white)}
+.status-icons{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--white)}
+
+/* SCREENS CONTAINER */
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  transform:translateX(30px);
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen.slide-left{transform:translateX(-30px)}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  height:calc(60px + var(--safe-bottom));
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:8px 0 0;
+  flex-shrink:0;
+  position:relative;z-index:10;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10px;font-weight:600;color:var(--sub);
+  cursor:pointer;padding:4px 16px;border-radius:12px;
+  transition:all .18s;user-select:none;
+  letter-spacing:.02em;
+}
+.nav-item .ni{font-size:20px;line-height:1;transition:transform .18s}
+.nav-item.active{color:var(--green)}
+.nav-item.active .ni{transform:scale(1.15)}
+.nav-item:active{transform:scale(.93)}
+
+/* ── COMMON COMPONENTS ── */
+.app-header{
+  padding:16px 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,12,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.header-logo{font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--white)}
+.header-logo span{color:var(--green)}
+.header-logo sup{color:var(--yellow);font-size:.5em;vertical-align:super}
+.header-actions{display:flex;gap:8px}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  cursor:pointer;border:1px solid var(--border);transition:all .15s;
+}
+.icon-btn:active{transform:scale(.9)}
+
+.section-pad{padding:0 16px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px}
+.sec-label{font-size:15px;font-weight:800;color:var(--white)}
+.sec-more{font-size:12px;font-weight:700;color:var(--green);opacity:.85;cursor:pointer}
+.sec-more:active{opacity:1}
+
+.chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--sub);font-size:11px;font-weight:600;
+  padding:5px 11px;border-radius:50px;white-space:nowrap;cursor:pointer;
+  transition:all .15s;
+}
+.chip.active,.chip:active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+
+/* ═══ HOME SCREEN ═══ */
+.hero-banner{
+  margin:12px 16px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#0d2010 0%,#143d1e 50%,#0a1a0d 100%);
+  padding:20px;overflow:hidden;position:relative;cursor:pointer;
+}
+.hero-banner::before{
+  content:'⚽';position:absolute;right:-10px;bottom:-15px;
+  font-size:90px;opacity:.12;transform:rotate(15deg);
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);
+  color:var(--green);font-size:10px;font-weight:700;letter-spacing:.08em;
+  padding:3px 9px;border-radius:50px;text-transform:uppercase;margin-bottom:10px;
+}
+.live-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:lp 1.5s infinite}
+@keyframes lp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,69,58,.5)}50%{opacity:.5;box-shadow:0 0 0 4px rgba(255,69,58,0)}}
+.hero-title{font-size:17px;font-weight:800;line-height:1.3;color:var(--white);margin-bottom:8px}
+.hero-meta{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:14px}
+.hero-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--green);color:#000;font-size:12px;font-weight:700;
+  padding:7px 14px;border-radius:8px;border:none;cursor:pointer;
+}
+
+.cats-scroll{
+  display:flex;gap:8px;overflow-x:auto;padding:4px 16px 4px;
+  scrollbar-width:none;
+}
+.cats-scroll::-webkit-scrollbar{display:none}
+.cat-pill{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:68px;background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:10px 8px;cursor:pointer;transition:all .18s;flex-shrink:0;
+}
+.cat-pill.active,.cat-pill:active{background:var(--green-dim);border-color:var(--green)}
+.cat-pill .cp-icon{font-size:22px}
+.cat-pill .cp-name{font-size:10px;font-weight:700;color:var(--sub);white-space:nowrap}
+.cat-pill.active .cp-name{color:var(--green)}
+
+.posts-scroll{
+  display:flex;gap:12px;overflow-x:auto;padding:4px 16px 8px;
+  scrollbar-width:none;
+}
+.posts-scroll::-webkit-scrollbar{display:none}
+.post-h-card{
+  min-width:200px;max-width:200px;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.post-h-card:active{transform:scale(.97)}
+.phc-thumb{
+  width:100%;height:110px;background:linear-gradient(135deg,var(--bg2),var(--bg3));
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  position:relative;
+}
+.phc-badge{
+  position:absolute;top:7px;left:7px;font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:4px;color:#000;
+}
+.badge-hot{background:var(--red);color:white}
+.badge-new{background:var(--blue);color:white}
+.badge-guide{background:var(--green)}
+.badge-break{background:var(--orange);color:white}
+.phc-body{padding:10px}
+.phc-cat{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.phc-title{font-size:12px;font-weight:700;line-height:1.35;color:var(--white);margin-bottom:6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.phc-meta{font-size:10px;color:var(--sub)}
+
+.post-v-list{padding:0 16px;display:flex;flex-direction:column;gap:10px}
+.post-v-item{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:12px;display:flex;gap:12px;cursor:pointer;transition:all .18s;
+}
+.post-v-item:active{transform:scale(.98);background:var(--card2)}
+.pvi-icon{
+  width:56px;height:56px;min-width:56px;border-radius:12px;
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+.pvi-body{flex:1;min-width:0}
+.pvi-cat{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);margin-bottom:3px}
+.pvi-title{font-size:13px;font-weight:700;line-height:1.35;color:var(--white);margin-bottom:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pvi-meta{font-size:10px;color:var(--sub)}
+.pvi-arrow{align-self:center;font-size:14px;color:var(--sub)}
+
+.cheat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.cheat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:12px;cursor:pointer;transition:all .18s;
+}
+.cheat-card:active{transform:scale(.96)}
+.cc-net{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.cc-badge{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.mtn{background:#FFC107;color:#000}.airtel{background:#E53935;color:white}
+.glo{background:#2E7D32;color:white}.nine{background:#9C27B0;color:white}
+.cc-net-name{font-size:11px;font-weight:700;color:var(--white)}
+.cc-title{font-size:11px;font-weight:600;line-height:1.4;color:var(--sub);margin-bottom:7px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cc-status{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700}
+.sdot{width:6px;height:6px;border-radius:50%}
+.sdot-ok{background:var(--green);box-shadow:0 0 5px var(--green)}.sdot-test{background:var(--yellow)}.sdot-dead{background:var(--red)}
+.stxt-ok{color:var(--green)}.stxt-test{color:var(--yellow)}.stxt-dead{color:var(--red)}
+
+.search-screen-header{padding:16px 16px 12px}
+.search-input-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:14px;
+  padding:11px 14px;transition:border-color .2s;
+}
+.search-input-wrap:focus-within{border-color:var(--green)}
+.search-input-wrap .si{font-size:16px;color:var(--sub)}
+.search-input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--white);font-family:var(--font);font-size:14px;
+}
+.search-input::placeholder{color:var(--sub)}
+.search-clear{font-size:14px;color:var(--sub);cursor:pointer;padding:2px}
+
+.trending-searches{padding:8px 16px 16px}
+.ts-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.ts-chips{display:flex;flex-wrap:wrap;gap:7px}
+
+.search-results{padding:0 16px;display:none;flex-direction:column;gap:10px}
+.search-results.show{display:flex}
+
+.match-card-full{
+  margin:0 16px 12px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;
+}
+.match-card-full:active{transform:scale(.98)}
+.mcf-league{
+  background:linear-gradient(90deg,rgba(0,230,118,.1),transparent);
+  padding:8px 14px;font-size:10px;font-weight:700;color:var(--green);
+  letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--border);
+}
+.mcf-body{padding:16px}
+.mcf-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.mcf-team{text-align:center;flex:1}
+.mcf-emoji{font-size:32px;display:block;margin-bottom:4px}
+.mcf-name{font-size:12px;font-weight:700;color:var(--white)}
+.mcf-score{
+  background:var(--bg3);border-radius:10px;padding:8px 14px;
+  font-size:22px;font-weight:800;color:var(--white);text-align:center;
+  min-width:70px;border:1px solid var(--border);
+}
+.mcf-title{font-size:13px;font-weight:700;color:var(--white);line-height:1.4;margin-bottom:4px}
+.mcf-sub{font-size:11px;color:var(--sub)}
+
+.network-tabs{
+  display:flex;gap:6px;overflow-x:auto;padding:8px 16px;
+  scrollbar-width:none;
+}
+.network-tabs::-webkit-scrollbar{display:none}
+.ntab{
+  display:flex;align-items:center;gap:5px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--sub);font-size:11px;font-weight:700;
+  padding:6px 12px;border-radius:50px;white-space:nowrap;cursor:pointer;
+  transition:all .15s;flex-shrink:0;
+}
+.ntab.active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.ntab .nb{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+
+.cheat-full-card{
+  margin:0 16px 10px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .18s;
+}
+.cheat-full-card:active{transform:scale(.98);background:var(--card2)}
+.cfc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cfc-net-badge{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.cfc-info{flex:1}
+.cfc-net-name{font-size:12px;font-weight:700;color:var(--white)}
+.cfc-type{font-size:10px;color:var(--sub)}
+.cfc-title{font-size:13px;font-weight:700;color:var(--white);line-height:1.4;margin-bottom:8px}
+.cfc-footer{display:flex;align-items:center;justify-content:space-between}
+.cfc-status{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.cfc-btn{background:var(--green);color:#000;font-size:10px;font-weight:700;padding:5px 11px;border-radius:6px;border:none;cursor:pointer}
+
+.profile-hero{
+  margin:12px 16px;background:linear-gradient(135deg,#0d1a0d,#142814);
+  border:1px solid rgba(0,230,118,.15);border-radius:var(--radius);padding:20px;
+  display:flex;align-items:center;gap:14px;
+}
+.profile-avatar{
+  width:60px;height:60px;border-radius:18px;
+  background:linear-gradient(135deg,var(--green),#00b856);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  flex-shrink:0;box-shadow:0 4px 20px var(--green-glow);
+}
+.profile-name{font-size:17px;font-weight:800;color:var(--white)}
+.profile-sub{font-size:12px;color:var(--sub);margin-top:2px}
+.profile-badge{
+  margin-top:8px;display:inline-flex;align-items:center;gap:4px;
+  background:var(--green-dim);border:1px solid rgba(0,230,118,.3);
+  color:var(--green);font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px;
+}
+
+.menu-group{margin:0 16px 8px}
+.menu-group-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;padding:12px 0 6px}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:6px;
+  cursor:pointer;transition:all .15s;
+}
+.menu-item:active{background:var(--card2);transform:scale(.98)}
+.mi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mi-text{flex:1}
+.mi-label{font-size:13px;font-weight:700;color:var(--white)}
+.mi-sub{font-size:11px;color:var(--sub);margin-top:1px}
+.mi-arrow{font-size:12px;color:var(--sub)}
+
+.playstore-banner{
+  margin:8px 16px 16px;
+  background:linear-gradient(135deg,#0a1628,#142440);
+  border:1px solid rgba(10,132,255,.2);border-radius:var(--radius);
+  padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.psb-icon{font-size:32px;flex-shrink:0}
+.psb-title{font-size:13px;font-weight:700;color:var(--white)}
+.psb-sub{font-size:11px;color:var(--sub);margin-top:2px}
+.psb-btn{margin-top:8px;display:inline-block;background:var(--blue);color:white;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px}
+
+.splash{
+  position:absolute;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:1000;transition:opacity .5s ease;
+}
+.splash-logo{font-size:42px;font-weight:800;color:var(--white);letter-spacing:-.04em;margin-bottom:6px}
+.splash-logo span{color:var(--green)}
+.splash-logo sup{color:var(--yellow);font-size:.4em;vertical-align:super}
+.splash-tagline{font-size:13px;color:var(--sub);margin-bottom:40px}
+.splash-loader{width:48px;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.splash-progress{height:100%;background:var(--green);border-radius:4px;animation:load 2s ease forwards}
+@keyframes load{0%{width:0}100%{width:100%}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .35s ease both}
+.fu1{animation-delay:.05s}.fu2{animation-delay:.1s}.fu3{animation-delay:.15s}.fu4{animation-delay:.2s}
+
+.outer{min-height:100vh;background:linear-gradient(135deg,#0f0f1a 0%,#1a0f2e 50%,#0f1a0f 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
+.device-label{color:rgba(255,255,255,.3);font-family:var(--font);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.preview-note{
+  background:rgba(0,230,118,.07);border:1px solid rgba(0,230,118,.15);
+  border-radius:12px;padding:14px 20px;max-width:390px;width:100%;
+  color:rgba(255,255,255,.6);font-family:var(--font);font-size:12px;line-height:1.6;
+}
+.preview-note strong{color:var(--green)}
+
+/* ── CATEGORY SCREEN STYLES ── */
+.category-tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;scrollbar-width:none}
+.category-tabs::-webkit-scrollbar{display:none}
+.category-tab{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);color:var(--sub);font-size:11px;font-weight:700;padding:6px 12px;border-radius:50px;white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0}
+.category-tab.active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+
+.loading-spinner{text-align:center;padding:40px 20px}
+.loading-spinner .spinner{width:40px;height:40px;border:3px solid var(--bg3);border-top-color:var(--green);border-radius:50%;margin:0 auto 16px;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-spinner p{color:var(--sub);font-size:14px}
+
+/* ── BLOG POST READER STYLES ── */
+.post-header{padding:16px 16px 12px}
+.post-label{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:50px;margin-bottom:12px}
+.post-label.breaking{background:rgba(255,69,58,.15);border:1px solid rgba(255,69,58,.3);color:var(--red)}
+.post-label.hot{background:rgba(255,159,10,.15);border:1px solid rgba(255,159,10,.3);color:var(--orange)}
+.post-label.new{background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.3);color:var(--blue)}
+.post-label.guide{background:rgba(0,230,118,.15);border:1px solid rgba(0,230,118,.3);color:var(--green)}
+.post-label.featured{background:rgba(191,90,242,.15);border:1px solid rgba(191,90,242,.3);color:var(--purple)}
+.post-title{font-size:20px;font-weight:800;line-height:1.35;color:var(--white);margin-bottom:12px}
+.post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px;font-size:11px;color:var(--sub)}
+.post-meta span{display:flex;align-items:center;gap:4px}
+.post-meta .author{color:var(--green);font-weight:700}
+.post-thumb{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius);margin-bottom:16px}
+
+.post-content{padding:0 16px 20px;font-size:14px;line-height:1.85;color:var(--sub)}
+.post-content h1,.post-content h2,.post-content h3,.post-content h4{color:var(--white);font-weight:700;margin:20px 0 12px}
+.post-content h1{font-size:18px}
+.post-content h2{font-size:16px}
+.post-content h3{font-size:15px}
+.post-content p{margin-bottom:14px}
+.post-content ul,.post-content ol{margin:12px 0 12px 20px;padding-left:0}
+.post-content li{margin-bottom:6px}
+.post-content a{color:var(--green);text-decoration:none;font-weight:600}
+.post-content strong{color:var(--white);font-weight:700}
+.post-content img{max-width:100%;height:auto;border-radius:var(--radius-sm);margin:12px 0;display:block}
+.post-content blockquote{border-left:3px solid var(--green);padding-left:12px;margin:16px 0;font-style:italic;color:var(--sub)}
+
+.post-tags{padding:16px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px}
+.post-tags-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.post-tags-list{display:flex;flex-wrap:wrap;gap:8px}
+.post-tag{background:var(--bg3);border:1px solid var(--border);color:var(--sub);font-size:11px;font-weight:600;padding:5px 12px;border-radius:50px}
+
+.admin-card{margin:0 16px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.admin-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.admin-avatar{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--green),#00b856);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 15px var(--green-glow)}
+.admin-info{flex:1}
+.admin-name{font-size:15px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:6px}
+.admin-badge{background:var(--green-dim);border:1px solid rgba(0,230,118,.3);color:var(--green);font-size:9px;font-weight:700;padding:2px 8px;border-radius:50px}
+.admin-role{font-size:11px;color:var(--sub);margin-top:2px}
+.admin-bio{font-size:12px;color:var(--sub);line-height:1.6}
+
+.comments-section{padding:0 16px 20px}
+.comments-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.comments-title{font-size:15px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:8px}
+.comments-count{background:var(--bg3);color:var(--sub);font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px}
+.add-comment-btn{background:var(--green-dim);border:1px solid rgba(0,230,118,.3);color:var(--green);font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .15s}
+.add-comment-btn:active{transform:scale(.95)}
+
+.comment-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:16px;display:none}
+.comment-form.show{display:block;animation:fadeUp .3s ease}
+.comment-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--white);font-family:var(--font);font-size:13px;margin-bottom:10px;outline:none}
+.comment-input:focus{border-color:var(--green)}
+.comment-input::placeholder{color:var(--sub)}
+.comment-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--white);font-family:var(--font);font-size:13px;min-height:80px;resize:none;margin-bottom:10px;outline:none}
+.comment-textarea:focus{border-color:var(--green)}
+.comment-textarea::placeholder{color:var(--sub)}
+.comment-form-actions{display:flex;gap:10px}
+.comment-submit{flex:1;background:var(--green);color:#000;font-size:12px;font-weight:700;padding:10px;border-radius:8px;border:none;cursor:pointer}
+.comment-submit:active{transform:scale(.98)}
+.comment-cancel{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--sub);font-size:12px;font-weight:700;padding:10px;border-radius:8px;cursor:pointer}
+.comment-cancel:active{transform:scale(.98)}
+
+.comment-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.comment-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.comment-avatar{width:36px;height:36px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.comment-author-info{flex:1}
+.comment-author{font-size:13px;font-weight:700;color:var(--white)}
+.comment-time{font-size:10px;color:var(--sub)}
+.comment-text{font-size:13px;color:var(--sub);line-height:1.6}
+.no-comments{text-align:center;padding:30px 20px;color:var(--sub);font-size:13px}
+.no-comments-icon{font-size:32px;margin-bottom:10px;opacity:.5}
+</style>
+</head>
+<body>
+<div class="outer">
+  <div class="device-label">NaijaxNet App — Standalone Experience</div>
+
+  <div class="phone-shell">
+    <div class="splash" id="splash">
+      <div class="splash-logo">Naija<span>x</span>Net<sup>™</sup></div>
+      <div class="splash-tagline">Free Cheats · Tech · News · Football</div>
+      <div class="splash-loader"><div class="splash-progress"></div></div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-time" id="clock">9:41</div>
+      <div class="status-icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <div class="screens">
+      <!-- HOME SCREEN -->
+      <div class="screen active" id="screen-home">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('search')">🔍</div>
+            <div class="icon-btn">🔔</div>
+          </div>
+        </div>
+
+        <div class="hero-banner fu" id="hero-banner" onclick="openPostFromFeed(0)">
+          <div class="hero-tag"><span class="live-dot"></span> Loading...</div>
+          <div class="hero-title">Loading latest post...</div>
+          <div class="hero-meta">NaijaxNet · Loading...</div>
+          <button class="hero-btn">Read Full Story →</button>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">Categories</div><div class="sec-more" onclick="switchScreen('all-categories')">See All</div></div>
+        <div class="cats-scroll">
+          <div class="cat-pill active" onclick="switchScreen('home')"><div class="cp-icon">🏠</div><div class="cp-name">Home</div></div>
+          <div class="cat-pill" onclick="switchScreen('cheats')"><div class="cp-icon">📶</div><div class="cp-name">Cheats</div></div>
+          <div class="cat-pill" onclick="switchScreen('football')"><div class="cp-icon">⚽</div><div class="cp-name">Football</div></div>
+          <div class="cat-pill" onclick="switchScreen('games')"><div class="cp-icon">🎮</div><div class="cp-name">Games</div></div>
+          <div class="cat-pill" onclick="switchScreen('tech')"><div class="cp-icon">💻</div><div class="cp-name">Tech</div></div>
+          <div class="cat-pill" onclick="switchScreen('news')"><div class="cp-icon">📰</div><div class="cp-name">News</div></div>
+          <div class="cat-pill" onclick="switchScreen('tutorials')"><div class="cp-icon">🎓</div><div class="cp-name">Tutorials</div></div>
+          <div class="cat-pill" onclick="switchScreen('entertainment')"><div class="cp-icon">🎬</div><div class="cp-name">Entertainment</div></div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">🔥 Hot Right Now</div><div class="sec-more" onclick="switchScreen('all-posts')">More</div></div>
+        <div class="posts-scroll" id="hot-posts-scroll">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading posts...</p></div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">Latest Posts</div><div class="sec-more" onclick="switchScreen('all-posts')">All Posts</div></div>
+        <div class="post-v-list" id="latest-posts-list">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading posts...</p></div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">📶 Free Browsing Cheats</div><div class="sec-more" onclick="switchScreen('cheats')">All Cheats</div></div>
+        <div class="cheat-grid" id="cheats-grid">
+          <div class="cheat-card" onclick="showCheatPost('mtn')"><div class="cc-net"><div class="cc-badge mtn">MTN</div><div class="cc-net-name">MTN Nigeria</div></div><div class="cc-title">KPN VPN Settings For MTN 0.0k</div><div class="cc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working</span></div></div>
+          <div class="cheat-card" onclick="showCheatPost('glo')"><div class="cc-net"><div class="cc-badge glo">GLO</div><div class="cc-net-name">Glo Nigeria</div></div><div class="cc-title">Glo Free Browsing HTTP Injector Config</div><div class="cc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working</span></div></div>
+          <div class="cheat-card" onclick="showCheatPost('airtel')"><div class="cc-net"><div class="cc-badge airtel">AIR</div><div class="cc-net-name">Airtel Nigeria</div></div><div class="cc-title">Airtel Night Plan & Data Tweaks 2026</div><div class="cc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div></div>
+          <div class="cheat-card" onclick="showCheatPost('9mobile')"><div class="cc-net"><div class="cc-badge nine">9MB</div><div class="cc-net-name">9Mobile</div></div><div class="cc-title">9Mobile VPN & Psiphon Settings</div><div class="cc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div></div>
+        </div>
+
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- ALL POSTS SCREEN -->
+      <div class="screen" id="screen-all-posts">
+        <div class="app-header">
+          <div class="header-logo">📑 All Posts</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="category-tabs">
+          <div class="category-tab active" onclick="filterAllPosts('all', this)">🌐 All</div>
+          <div class="category-tab" onclick="filterAllPosts('football', this)">⚽ Football</div>
+          <div class="category-tab" onclick="filterAllPosts('games', this)">🎮 Games</div>
+          <div class="category-tab" onclick="filterAllPosts('tech', this)">💻 Tech</div>
+          <div class="category-tab" onclick="filterAllPosts('cheats', this)">📶 Cheats</div>
+          <div class="category-tab" onclick="filterAllPosts('news', this)">📰 News</div>
+        </div>
+        <div class="post-v-list" id="all-posts-list" style="padding-top:10px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading all posts...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- ALL CATEGORIES SCREEN -->
+      <div class="screen" id="screen-all-categories">
+        <div class="app-header">
+          <div class="header-logo">📂 Categories</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" style="padding-top:16px">
+          <div class="post-v-item" onclick="switchScreen('football')"><div class="pvi-icon" style="background:linear-gradient(135deg,#1a3a1a,#2d7a2d)">⚽</div><div class="pvi-body"><div class="pvi-cat">Sports</div><div class="pvi-title">Football News & Match Reports</div><div class="pvi-meta">Premier League, La Liga, UCL & More</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('games')"><div class="pvi-icon" style="background:linear-gradient(135deg,#3a1a3a,#7a2d7a)">🎮</div><div class="pvi-body"><div class="pvi-cat">Gaming</div><div class="pvi-title">Android Games & MOD APKs</div><div class="pvi-meta">eFootball, FIFA, PES & More</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('tech')"><div class="pvi-icon" style="background:linear-gradient(135deg,#1a1a3a,#2d2d7a)">💻</div><div class="pvi-body"><div class="pvi-cat">Technology</div><div class="pvi-title">Tech News & Reviews</div><div class="pvi-meta">Phones, Apps, Gadgets & More</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('cheats')"><div class="pvi-icon" style="background:linear-gradient(135deg,#3a3a1a,#7a7a2d)">📶</div><div class="pvi-body"><div class="pvi-cat">Free Browsing</div><div class="pvi-title">MTN, Glo, Airtel, 9Mobile Cheats</div><div class="pvi-meta">VPN Configs & Data Tweaks</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('news')"><div class="pvi-icon" style="background:linear-gradient(135deg,#3a1a1a,#7a2d2d)">📰</div><div class="pvi-body"><div class="pvi-cat">News</div><div class="pvi-title">Breaking News & Updates</div><div class="pvi-meta">Local & International News</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('tutorials')"><div class="pvi-icon" style="background:linear-gradient(135deg,#1a3a3a,#2d7a7a)">🎓</div><div class="pvi-body"><div class="pvi-cat">Education</div><div class="pvi-title">Tutorials & How-To Guides</div><div class="pvi-meta">Step-by-step tutorials</div></div><div class="pvi-arrow">›</div></div>
+          <div class="post-v-item" onclick="switchScreen('entertainment')"><div class="pvi-icon" style="background:linear-gradient(135deg,#3a2a1a,#7a5a2d)">🎬</div><div class="pvi-body"><div class="pvi-cat">Entertainment</div><div class="pvi-title">Movies, Music & Celebrity Gossip</div><div class="pvi-meta">Entertainment news & updates</div></div><div class="pvi-arrow">›</div></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- GAMES SCREEN -->
+      <div class="screen" id="screen-games">
+        <div class="app-header">
+          <div class="header-logo">🎮 Games</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" id="games-posts-list" style="padding-top:16px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading games...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- TECH SCREEN -->
+      <div class="screen" id="screen-tech">
+        <div class="app-header">
+          <div class="header-logo">💻 Tech News</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" id="tech-posts-list" style="padding-top:16px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading tech news...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- NEWS SCREEN -->
+      <div class="screen" id="screen-news">
+        <div class="app-header">
+          <div class="header-logo">📰 News</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" id="news-posts-list" style="padding-top:16px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading news...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- TUTORIALS SCREEN -->
+      <div class="screen" id="screen-tutorials">
+        <div class="app-header">
+          <div class="header-logo">🎓 Tutorials</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" id="tutorials-posts-list" style="padding-top:16px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading tutorials...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- ENTERTAINMENT SCREEN -->
+      <div class="screen" id="screen-entertainment">
+        <div class="app-header">
+          <div class="header-logo">🎬 Entertainment</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+        <div class="post-v-list" id="entertainment-posts-list" style="padding-top:16px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading entertainment...</p></div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- SEARCH SCREEN -->
+      <div class="screen" id="screen-search">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+
+        <div class="search-screen-header">
+          <div class="search-input-wrap">
+            <span class="si">🔍</span>
+            <input class="search-input" id="searchField" type="text" placeholder="Search posts..." oninput="handleAppSearch(this.value)"/>
+            <span class="search-clear" onclick="clearAppSearch()">✕</span>
+          </div>
+        </div>
+
+        <div class="trending-searches" id="trending-searches">
+          <div class="ts-title">🔥 Trending Searches</div>
+          <div class="ts-chips">
+            <span class="chip" onclick="quickAppSearch('MTN free browsing')">📶 MTN Free Browsing</span>
+            <span class="chip" onclick="quickAppSearch('eFootball 2026')">⚽ eFootball 2026</span>
+            <span class="chip" onclick="quickAppSearch('Chelsea')">🔵 Chelsea</span>
+            <span class="chip" onclick="quickAppSearch('KPN VPN')">🔐 KPN VPN</span>
+            <span class="chip" onclick="quickAppSearch('FIFA 2026')">🏆 FIFA 2026</span>
+            <span class="chip" onclick="quickAppSearch('Airtel cheat')">🔴 Airtel Cheat</span>
+            <span class="chip" onclick="quickAppSearch('Android review')">📱 Android Review</span>
+            <span class="chip" onclick="quickAppSearch('Arsenal')">🔴 Arsenal</span>
+          </div>
+        </div>
+
+        <div class="search-results" id="searchResults"></div>
+        <div style="height:20px"></div>
+      </div>
+
+      <!-- FOOTBALL SCREEN -->
+      <div class="screen" id="screen-football">
+        <div class="app-header">
+          <div class="header-logo">⚽ Football</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Recent Results</div></div>
+
+        <div class="match-card-full" onclick="openPostByUrl('https://naijaxnet.blogspot.com/2026/03/chelseas-stunning-comeback-aston-villa.html')">
+          <div class="mcf-league">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League · Mar 4, 2026</div>
+          <div class="mcf-body">
+            <div class="mcf-teams">
+              <div class="mcf-team"><span class="mcf-emoji">🟣</span><div class="mcf-name">Aston Villa</div></div>
+              <div class="mcf-score">1–4</div>
+              <div class="mcf-team"><span class="mcf-emoji">🔵</span><div class="mcf-name">Chelsea</div></div>
+            </div>
+            <div class="mcf-title">Joao Pedro Hat-Trick Seals Stunning Chelsea Comeback at Villa Park</div>
+            <div class="mcf-sub">Pedro 35', 45+6', 64' · Palmer 55' | Douglas Luiz 2'</div>
+          </div>
+        </div>
+
+        <div class="match-card-full" onclick="openPostByUrl('https://naijaxnet.blogspot.com/2026/03/arsenal-2-1-chelsea-set-piece-mastery.html')">
+          <div class="mcf-league">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League · Mar 1, 2026</div>
+          <div class="mcf-body">
+            <div class="mcf-teams">
+              <div class="mcf-team"><span class="mcf-emoji">🔴</span><div class="mcf-name">Arsenal</div></div>
+              <div class="mcf-score">2–1</div>
+              <div class="mcf-team"><span class="mcf-emoji">🔵</span><div class="mcf-name">Chelsea</div></div>
+            </div>
+            <div class="mcf-title">Set-Piece Mastery Secures Vital London Derby Win for the Gunners</div>
+            <div class="mcf-sub">Saliba 21' · Timber 66' | Own Goal 45+2'</div>
+          </div>
+        </div>
+
+        <div class="sec-row"><div class="sec-label">📱 Football News</div><div class="sec-more" onclick="switchScreen('all-posts')">More</div></div>
+        <div class="post-v-list" id="football-posts-list" style="padding-bottom:12px">
+          <div class="loading-spinner"><div class="spinner"></div><p>Loading football news...</p></div>
+        </div>
+      </div>
+
+      <!-- CHEATS SCREEN -->
+      <div class="screen" id="screen-cheats">
+        <div class="app-header">
+          <div class="header-logo">📶 Free Cheats</div>
+          <div class="header-actions">
+            <div class="icon-btn" onclick="switchScreen('home')">✕</div>
+          </div>
+        </div>
+
+        <div class="network-tabs">
+          <div class="ntab active" id="ntab-all" onclick="filterNet('all',this)">🌐 All Networks</div>
+          <div class="ntab" id="ntab-mtn" onclick="filterNet('mtn',this)"><div class="nb mtn">M</div>MTN</div>
+          <div class="ntab" id="ntab-airtel" onclick="filterNet('airtel',this)"><div class="nb airtel" style="color:white">A</div>Airtel</div>
+          <div class="ntab" id="ntab-glo" onclick="filterNet('glo',this)"><div class="nb glo" style="color:white">G</div>Glo</div>
+          <div class="ntab" id="ntab-nine" onclick="filterNet('nine',this)"><div class="nb nine" style="color:white">9</div>9Mobile</div>
+        </div>
+
+        <div id="cheats-list" style="padding-bottom:16px">
+          <div class="cheat-full-card" data-net="mtn" onclick="openPostByUrl('https://naijaxnet.blogspot.com/2018/10/eproxy-settings-2018-2019-for-mtn-00k.html')">
+            <div class="cfc-header"><div class="cfc-net-badge mtn">MTN</div><div class="cfc-info"><div class="cfc-net-name">MTN Nigeria</div><div class="cfc-type">HTTP Injector · KPN VPN · Eproxy</div></div></div>
+            <div class="cfc-title">KPN VPN Settings For MTN 0.0k — HTTP Injector, Eproxy & Psiphon XP 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="mtn" onclick="openPostByUrl('https://naijaxnet.blogspot.com/2018/11/how-to-browse-absolutely-anonymous-with.html')">
+            <div class="cfc-header"><div class="cfc-net-badge mtn">MTN</div><div class="cfc-info"><div class="cfc-net-name">MTN Nigeria</div><div class="cfc-type">mPulse · Data Tweak</div></div></div>
+            <div class="cfc-title">How To Tweak MTN mPulse Data To Power All Apps Anonymously</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="airtel" onclick="showCheatPost('airtel')">
+            <div class="cfc-header"><div class="cfc-net-badge airtel">AIR</div><div class="cfc-info"><div class="cfc-net-name">Airtel Nigeria</div><div class="cfc-type">Night Plan · Data Tweak</div></div></div>
+            <div class="cfc-title">Latest Airtel Free Browsing Cheats 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-test"></span><span class="stxt-test">Testing</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+          <div class="cheat-full-card" data-net="glo" onclick="showCheatPost('glo')">
+            <div class="cfc-header"><div class="cfc-net-badge glo">GLO</div><div class="cfc-info"><div class="cfc-net-name">Glo Nigeria</div><div class="cfc-type">HTTP Injector · Config Files</div></div></div>
+            <div class="cfc-title">Glo Free Browsing Cheats 2026</div>
+            <div class="cfc-footer"><div class="cfc-status"><span class="sdot sdot-ok"></span><span class="stxt-ok">Working Now</span></div><button class="cfc-btn">Read →</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MORE SCREEN -->
+      <div class="screen" id="screen-more">
+        <div class="app-header">
+          <div class="header-logo">Naija<span>x</span>Net<sup>™</sup></div>
+        </div>
+
+        <div class="profile-hero">
+          <div class="profile-avatar">🇳🇬</div>
+          <div>
+            <div class="profile-name">NaijaxNet</div>
+            <div class="profile-sub">Free Browsing · Tech · News · Football</div>
+            <div class="profile-badge">✅ Trusted Since 2017</div>
+          </div>
+        </div>
+
+        <div class="playstore-banner" onclick="window.open('https://play.google.com/store/apps/details?id=com.naijaxnet.blog','_blank')">
+          <div class="psb-icon">📱</div>
+          <div class="psb-text">
+            <div class="psb-title">NaijaxNet Android App</div>
+            <div class="psb-sub">Available on Google Play Store</div>
+            <div class="psb-btn">Open on Play Store →</div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">📋 Quick Links</div>
+          <div class="menu-item" onclick="switchScreen('all-posts')"><div class="mi-icon" style="background:rgba(0,230,118,.12)">📑</div><div class="mi-text"><div class="mi-label">All Posts</div><div class="mi-sub">Browse all articles</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="switchScreen('all-categories')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">📂</div><div class="mi-text"><div class="mi-label">Categories</div><div class="mi-sub">Browse by topic</div></div><div class="mi-arrow">›</div></div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-group-title">📱 Connect With Us</div>
+          <div class="menu-item" onclick="window.open('https://t.me/naijaxnet','_blank')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">✈️</div><div class="mi-text"><div class="mi-label">Telegram Group</div><div class="mi-sub">Join our community</div></div><div class="mi-arrow">›</div></div>
+          <div class="menu-item" onclick="window.open('https://twitter.com/naijaxnet','_blank')"><div class="mi-icon" style="background:rgba(10,132,255,.15)">🐦</div><div class="mi-text"><div class="mi-label">Twitter/X</div><div class="mi-sub">Follow for updates</div></div><div class="mi-arrow">›</div></div>
+        </div>
+
+        <div style="text-align:center;padding:12px 0 20px;font-size:11px;color:var(--sub)">
+          NaijaxNet v3.0 · Made in Nigeria 🇳🇬<br>
+          <span style="color:var(--green)">naijaxnet.blogspot.com</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST READER OVERLAY -->
+    <div id="post-reader" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div id="post-reader-bar" style="position:sticky;top:0;z-index:2;height:54px;background:rgba(11,12,15,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 12px;">
+        <div onclick="closePost()" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;">&#8592;</div>
+        <div style="flex:1;font-size:13px;font-weight:700;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="post-reader-title-bar">NaijaxNet</div>
+        <div id="post-share-btn" onclick="sharePost()" style="width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">&#x1F4E4;</div>
+      </div>
+      <div id="post-reader-body" style="padding:0 0 100px;"></div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" id="nav-home" onclick="switchScreen('home')"><div class="ni">🏠</div>Home</div>
+      <div class="nav-item" id="nav-cheats" onclick="switchScreen('cheats')"><div class="ni">📶</div>Cheats</div>
+      <div class="nav-item" id="nav-football" onclick="switchScreen('football')"><div class="ni">⚽</div>Football</div>
+      <div class="nav-item" id="nav-search" onclick="switchScreen('search')"><div class="ni">🔍</div>Search</div>
+      <div class="nav-item" id="nav-more" onclick="switchScreen('more')"><div class="ni">☰</div>More</div>
+    </div>
+  </div>
+
+  <div class="preview-note">
+    <strong>✅ Standalone NaijaxNet App</strong> — All content loads internally. No external redirects.
+  </div>
+</div>
+
+<script>
+// ── CLOCK ──
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent=n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+}
+updateClock();setInterval(updateClock,10000);
+
+// ── SPLASH SCREEN ──
+setTimeout(()=>{
+  const s=document.getElementById('splash');
+  if(s){s.style.opacity='0';setTimeout(()=>s.remove(),500);}
+},2200);
+
+// ── SCREEN NAVIGATION ──
+let current='home';
+function switchScreen(name){
+  const prev=document.getElementById('screen-'+current);
+  const next=document.getElementById('screen-'+name);
+  if(!next||current===name)return;
+  prev.classList.remove('active');prev.classList.add('slide-left');
+  next.classList.add('active');next.scrollTop=0;
+  setTimeout(()=>prev.classList.remove('slide-left'),300);
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  const ni=document.getElementById('nav-'+name);
+  if(ni)ni.classList.add('active');
+  current=name;
+  
+  // Load posts for specific screens
+  if(name==='all-posts' && !window._allPostsLoaded) loadAllPostsScreen();
+  if(name==='games' && !window._gamesPostsLoaded) loadCategoryPosts('games', ['Games', 'Android Games', 'Game Reviews', 'MOD APK']);
+  if(name==='tech' && !window._techPostsLoaded) loadCategoryPosts('tech', ['Tech News', 'Technology', 'Android Reviews']);
+  if(name==='news' && !window._newsPostsLoaded) loadCategoryPosts('news', ['News', 'Breaking News', 'Foreign News']);
+  if(name==='tutorials' && !window._tutorialsPostsLoaded) loadCategoryPosts('tutorials', ['Tutorial', 'Tutorials', 'How-To', 'Guide']);
+  if(name==='entertainment' && !window._entPostsLoaded) loadCategoryPosts('entertainment', ['ENTERTAINMENT', 'Entertainment', 'Music', 'Movies']);
+  if(name==='football' && !window._footballPostsLoaded) loadCategoryPosts('football', ['Football', 'Premier League', 'UEFA', 'Sports']);
+}
+
+// ── BLOG FEED MANAGEMENT ──
+var _allPosts = [];
+var _postsByCategory = {};
+var _currentPostUrl = '';
+var _postComments = {};
+
+// Fetch all posts from blog feed
+function fetchAllPosts(callback) {
+  if(_allPosts.length > 0) {
+    if(callback) callback(_allPosts);
+    return;
+  }
+  
+  window._nxnAllPostsCB = function(data) {
+    try {
+      var entries = data.feed.entry || [];
+      _allPosts = entries.map(function(entry) {
+        var title = entry.title ? entry.title.$t : 'Untitled';
+        var links = entry.link || [];
+        var postUrl = '';
+        for(var i = 0; i < links.length; i++) {
+          if(links[i].rel === 'alternate') {
+            postUrl = links[i].href.replace('http:', 'https:');
+            break;
+          }
+        }
+        var published = entry.published ? new Date(entry.published.$t) : new Date();
+        var date = published.toLocaleDateString('en-NG', {day:'numeric',month:'short',year:'numeric'});
+        var time = published.toLocaleTimeString('en-NG', {hour:'numeric',minute:'2-digit'});
+        var labels = entry.category ? entry.category.map(function(c) { return c.term; }) : [];
+        var content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
+        var thumbMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+        var thumb = thumbMatch ? thumbMatch[1] : '';
+        var postId = entry.id ? entry.id.$t.split('post-').pop() : Date.now().toString();
+        
+        // Determine emoji and badge
+        var emoji = '📄';
+        var badgeClass = 'badge-guide';
+        var labelType = 'guide';
+        
+        if(labels.some(function(l) { return l.toLowerCase().includes('breaking'); })) {
+          emoji = '🔴'; badgeClass = 'badge-break'; labelType = 'breaking';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('football') || l.toLowerCase().includes('premier'); })) {
+          emoji = '⚽'; labelType = 'featured';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('game') || l.toLowerCase().includes('android'); })) {
+          emoji = '🎮'; badgeClass = 'badge-new'; labelType = 'new';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('cheat') || l.toLowerCase().includes('mtn'); })) {
+          emoji = '📶'; badgeClass = 'badge-hot'; labelType = 'hot';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('news'); })) {
+          emoji = '📰'; badgeClass = 'badge-break'; labelType = 'breaking';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('tech'); })) {
+          emoji = '💻'; labelType = 'guide';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('tutorial'); })) {
+          emoji = '🎓'; labelType = 'guide';
+        } else if(labels.some(function(l) { return l.toLowerCase().includes('entertainment'); })) {
+          emoji = '🎬'; labelType = 'featured';
+        }
+        
+        return {
+          id: postId,
+          title: title,
+          url: postUrl,
+          date: date,
+          time: time,
+          labels: labels,
+          labelType: labelType,
+          badgeClass: badgeClass,
+          emoji: emoji,
+          thumb: thumb,
+          content: content,
+          category: labels.length > 0 ? labels[0] : 'General'
+        };
+      });
+      
+      if(callback) callback(_allPosts);
+    } catch(e) {
+      console.error('Feed parse error:', e);
+      if(callback) callback([]);
+    }
+  };
+  
+  var oldScript = document.getElementById('nxn-all-posts-script');
+  if(oldScript) oldScript.remove();
+  
+  var script = document.createElement('script');
+  script.id = 'nxn-all-posts-script';
+  script.src = 'https://naijaxnet.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=150&callback=_nxnAllPostsCB';
+  script.onerror = function() { if(callback) callback([]); };
+  document.head.appendChild(script);
+}
+
+// Initialize home screen with fetched posts
+function initHomeScreen() {
+  fetchAllPosts(function(posts) {
+    if(posts.length === 0) return;
+    
+    // Update Hero Banner with latest post
+    var heroBanner = document.getElementById('hero-banner');
+    if(heroBanner && posts[0]) {
+      var latest = posts[0];
+      heroBanner.setAttribute('onclick', 'openPostByUrl("' + latest.url + '")');
+      heroBanner.querySelector('.hero-tag').innerHTML = '<span class="live-dot"></span> ' + latest.labelType.toUpperCase();
+      heroBanner.querySelector('.hero-title').textContent = latest.title;
+      heroBanner.querySelector('.hero-meta').textContent = 'NaijaxNet · ' + latest.date + ' · ' + latest.category;
+    }
+    
+    // Update Hot Right Now section (posts 1-6)
+    var hotScroll = document.getElementById('hot-posts-scroll');
+    if(hotScroll && posts.length > 1) {
+      var hotPosts = posts.slice(1, 7);
+      hotScroll.innerHTML = hotPosts.map(function(post) {
+        return '<div class="post-h-card" onclick="openPostByUrl(\'' + post.url + '\')">' +
+          '<div class="phc-thumb">' + post.emoji + '<span class="phc-badge ' + post.badgeClass + '">' + post.labelType.toUpperCase() + '</span></div>' +
+          '<div class="phc-body"><div class="phc-cat">' + post.category + '</div><div class="phc-title">' + post.title + '</div><div class="phc-meta">' + post.date + '</div></div>' +
+          '</div>';
+      }).join('');
+    }
+    
+    // Update Latest Posts section (posts 7-14)
+    var latestList = document.getElementById('latest-posts-list');
+    if(latestList && posts.length > 7) {
+      var latestPosts = posts.slice(7, 15);
+      latestList.innerHTML = latestPosts.map(function(post) {
+        return '<div class="post-v-item" onclick="openPostByUrl(\'' + post.url + '\')">' +
+          '<div class="pvi-icon">' + post.emoji + '</div>' +
+          '<div class="pvi-body"><div class="pvi-cat">' + post.category + '</div><div class="pvi-title">' + post.title + '</div><div class="pvi-meta">' + post.date + '</div></div>' +
+          '<div class="pvi-arrow">›</div></div>';
+      }).join('');
+    }
+  });
+}
+
+// Load All Posts screen
+function loadAllPostsScreen() {
+  window._allPostsLoaded = true;
+  fetchAllPosts(function(posts) {
+    var container = document.getElementById('all-posts-list');
+    if(!container) return;
+    
+    if(posts.length === 0) {
+      container.innerHTML = '<div class="loading-spinner"><p>No posts found</p></div>';
+      return;
+    }
+    
+    container.innerHTML = posts.map(function(post) {
+      return '<div class="post-v-item" data-category="' + post.labels.join(',').toLowerCase() + '" onclick="openPostByUrl(\'' + post.url + '\')">' +
+        '<div class="pvi-icon">' + post.emoji + '</div>' +
+        '<div class="pvi-body"><div class="pvi-cat">' + post.category + '</div><div class="pvi-title">' + post.title + '</div><div class="pvi-meta">' + post.date + '</div></div>' +
+        '<div class="pvi-arrow">›</div></div>';
+    }).join('');
+  });
+}
+
+// Filter posts in All Posts screen
+function filterAllPosts(category, el) {
+  document.querySelectorAll('#screen-all-posts .category-tab').forEach(function(t) { t.classList.remove('active'); });
+  if(el) el.classList.add('active');
+  
+  var items = document.querySelectorAll('#all-posts-list .post-v-item');
+  items.forEach(function(item) {
+    if(category === 'all') {
+      item.style.display = 'flex';
+    } else {
+      var cats = item.dataset.category || '';
+      item.style.display = cats.includes(category) ? 'flex' : 'none';
+    }
+  });
+}
+
+// Load category-specific posts
+function loadCategoryPosts(screenName, categoryLabels) {
+  window['_' + screenName + 'PostsLoaded'] = true;
+  
+  fetchAllPosts(function(posts) {
+    var container = document.getElementById(screenName + '-posts-list');
+    if(!container) return;
+    
+    var filtered = posts.filter(function(post) {
+      return post.labels.some(function(label) {
+        return categoryLabels.some(function(cat) {
+          return label.toLowerCase().includes(cat.toLowerCase());
+        });
+      });
+    });
+    
+    if(filtered.length === 0) {
+      container.innerHTML = '<div class="loading-spinner"><p>No posts in this category yet</p></div>';
+      return;
+    }
+    
+    container.innerHTML = filtered.map(function(post) {
+      return '<div class="post-v-item" onclick="openPostByUrl(\'' + post.url + '\')">' +
+        '<div class="pvi-icon">' + post.emoji + '</div>' +
+        '<div class="pvi-body"><div class="pvi-cat">' + post.category + '</div><div class="pvi-title">' + post.title + '</div><div class="pvi-meta">' + post.date + '</div></div>' +
+        '<div class="pvi-arrow">›</div></div>';
+    }).join('');
+  });
+}
+
+// ── POST READER ──
+function openPostByUrl(url) {
+  _currentPostUrl = url;
+  
+  // Show reader immediately with loading state
+  var reader = document.getElementById('post-reader');
+  var body = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+  
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Loading post...</p></div>';
+  titleBar.textContent = 'Loading...';
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  
+  // Find post in cached posts
+  var post = _allPosts.find(function(p) { return p.url === url; });
+  
+  if(post) {
+    // We have the post data, render it directly
+    renderPostContent(post);
+  } else {
+    // Fetch from feed using alternative method
+    fetchPostByUrl(url);
+  }
+}
+
+function openPostFromFeed(index) {
+  if(_allPosts[index]) {
+    openPostByUrl(_allPosts[index].url);
+  }
+}
+
+function fetchPostByUrl(url) {
+  var reader = document.getElementById('post-reader');
+  var body = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+  
+  body.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Loading post...</p></div>';
+  titleBar.textContent = 'Loading...';
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  
+  // Extract post ID from URL
+  var urlParts = url.split('/');
+  var slug = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
+  
+  // Try to find in all posts first
+  var foundPost = _allPosts.find(function(p) {
+    return p.url.includes(slug) || slug.includes(p.id);
+  });
+  
+  if(foundPost) {
+    renderPostContent(foundPost);
+    return;
+  }
+  
+  // Fallback: try to fetch via search
+  window._nxnPostCB = function(data) {
+    try {
+      var entries = data.feed.entry || [];
+      if(entries.length > 0) {
+        var entry = entries[0];
+        var post = {
+          id: entry.id ? entry.id.$t.split('post-').pop() : Date.now().toString(),
+          title: entry.title ? entry.title.$t : 'Untitled',
+          url: url,
+          date: entry.published ? new Date(entry.published.$t).toLocaleDateString('en-NG', {day:'numeric',month:'short',year:'numeric'}) : '',
+          time: entry.published ? new Date(entry.published.$t).toLocaleTimeString('en-NG', {hour:'numeric',minute:'2-digit'}) : '',
+          labels: entry.category ? entry.category.map(function(c) { return c.term; }) : [],
+          labelType: 'guide',
+          content: entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : ''),
+          category: entry.category && entry.category[0] ? entry.category[0].term : 'General'
+        };
+        renderPostContent(post);
+      } else {
+        showPostError(url);
+      }
+    } catch(e) {
+      showPostError(url);
+    }
+  };
+  
+  var oldScript = document.getElementById('nxn-post-script');
+  if(oldScript) oldScript.remove();
+  
+  var script = document.createElement('script');
+  script.id = 'nxn-post-script';
+  script.src = 'https://naijaxnet.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=5&q=' + encodeURIComponent(slug.replace('.html', '').replace(/-/g, ' ')) + '&callback=_nxnPostCB';
+  script.onerror = function() { showPostError(url); };
+  document.head.appendChild(script);
+}
+
+function renderPostContent(post) {
+  var reader = document.getElementById('post-reader');
+  var body = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+  
+  // Show the reader
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+  
+  var labels = post.labels || [];
+  var primaryLabel = labels.length > 0 ? labels[0] : 'Article';
+  var labelClass = post.labelType || 'guide';
+  
+  // Extract thumbnail
+  var thumb = post.thumb || '';
+  if(!thumb && post.content) {
+    var thumbMatch = post.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+    thumb = thumbMatch ? thumbMatch[1] : '';
+  }
+  
+  // Clean content
+  var cleanContent = post.content || '';
+  if(thumb) {
+    cleanContent = cleanContent.replace(/<img[^>]+src=["'][^"']+["'][^>]*>/i, '');
+  }
+  
+  var postId = post.id || Date.now().toString();
+  if(!_postComments[postId]) _postComments[postId] = [];
+  
+  titleBar.textContent = post.title;
+  
+  var html = '';
+  
+  // Header
+  html += '<div class="post-header">';
+  html += '<div class="post-label ' + labelClass + '">' + primaryLabel + '</div>';
+  html += '<h1 class="post-title">' + post.title + '</h1>';
+  html += '<div class="post-meta">';
+  html += '<span class="author">✍️ Whyteman Harrison</span>';
+  html += '<span>📅 ' + post.date + '</span>';
+  html += '<span>🕐 ' + (post.time || '') + '</span>';
+  html += '</div>';
+  html += '</div>';
+  
+  // Thumbnail
+  if(thumb) {
+    html += '<img src="' + thumb + '" class="post-thumb" alt="">';
+  }
+  
+  // Content
+  html += '<div class="post-content" id="nxn-post-content">' + cleanContent + '</div>';
+  
+  // Tags
+  if(labels.length > 0) {
+    html += '<div class="post-tags">';
+    html += '<div class="post-tags-title">🏷️ Tags</div>';
+    html += '<div class="post-tags-list">';
+    labels.forEach(function(label) {
+      html += '<span class="post-tag">' + label + '</span>';
+    });
+    html += '</div></div>';
+  }
+  
+  // Admin Card
+  html += '<div class="admin-card">';
+  html += '<div class="admin-card-header">';
+  html += '<div class="admin-avatar">🇳🇬</div>';
+  html += '<div class="admin-info">';
+  html += '<div class="admin-name">Whyteman Harrison <span class="admin-badge">✓ Admin</span></div>';
+  html += '<div class="admin-role">Founder & Editor-in-Chief</div>';
+  html += '</div></div>';
+  html += '<div class="admin-bio">Founder & Editor-in-Chief at NaijaxNet. Passionate about football, tech, and bringing you the latest free browsing cheats since 2017.</div>';
+  html += '</div>';
+  
+  // Comments
+  html += '<div class="comments-section">';
+  html += '<div class="comments-header">';
+  html += '<div class="comments-title">💬 Comments <span class="comments-count" id="comment-count-' + postId + '">' + _postComments[postId].length + '</span></div>';
+  html += '<button class="add-comment-btn" onclick="toggleCommentForm(\'' + postId + '\')">+ Add Comment</button>';
+  html += '</div>';
+  
+  html += '<div class="comment-form" id="comment-form-' + postId + '">';
+  html += '<input type="text" class="comment-input" id="comment-name-' + postId + '" placeholder="Your name" maxlength="30">';
+  html += '<textarea class="comment-textarea" id="comment-text-' + postId + '" placeholder="Write your comment..." maxlength="500"></textarea>';
+  html += '<div class="comment-form-actions">';
+  html += '<button class="comment-submit" onclick="submitComment(\'' + postId + '\')">Post Comment</button>';
+  html += '<button class="comment-cancel" onclick="toggleCommentForm(\'' + postId + '\')">Cancel</button>';
+  html += '</div></div>';
+  
+  html += '<div id="comments-list-' + postId + '">';
+  if(_postComments[postId].length === 0) {
+    html += '<div class="no-comments"><div class="no-comments-icon">💬</div>No comments yet. Be the first to comment!</div>';
+  } else {
+    _postComments[postId].forEach(function(comment) {
+      html += renderCommentItem(comment);
+    });
+  }
+  html += '</div></div>';
+  
+  body.innerHTML = html;
+  
+  // Style content - Adaptive dark theme
+  setTimeout(function() {
+    var pc = document.getElementById('nxn-post-content');
+    if(!pc) return;
+    
+    // Helper to check if color is dark
+    function isDarkColor(color) {
+      if(!color) return false;
+      color = color.toLowerCase();
+      // Check for dark colors (black, dark grays, dark blues, etc.)
+      if(color.includes('black') || color.includes('#000') || color.includes('rgb(0,0,0') || color.includes('rgb(0, 0, 0')) return true;
+      if(color.includes('#1') || color.includes('#2') || color.includes('#3')) {
+        // Check if it's a dark hex
+        var hex = color.match(/#([0-9a-f]{6}|[0-9a-f]{3})/);
+        if(hex) {
+          var r = parseInt(hex[1].substr(0,2), 16);
+          var g = parseInt(hex[1].substr(2,2), 16);
+          var b = parseInt(hex[1].substr(4,2), 16);
+          if((r+g+b)/3 < 100) return true;
+        }
+      }
+      // Check rgb values
+      var rgb = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if(rgb) {
+        var avg = (parseInt(rgb[1]) + parseInt(rgb[2]) + parseInt(rgb[3])) / 3;
+        if(avg < 100) return true;
+      }
+      return false;
+    }
+    
+    // Helper to check if color is light (readable on dark bg)
+    function isLightColor(color) {
+      if(!color) return false;
+      color = color.toLowerCase();
+      if(color.includes('white') || color.includes('#fff')) return true;
+      if(color.includes('#e') || color.includes('#f') || color.includes('#d') || color.includes('#c') || color.includes('#b')) {
+        var hex = color.match(/#([0-9a-f]{6}|[0-9a-f]{3})/);
+        if(hex) {
+          var r = parseInt(hex[1].substr(0,2), 16) || 255;
+          var g = parseInt(hex[1].substr(2,2), 16) || 255;
+          var b = parseInt(hex[1].substr(4,2), 16) || 255;
+          if((r+g+b)/3 > 150) return true;
+        }
+      }
+      var rgb = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if(rgb) {
+        var avg = (parseInt(rgb[1]) + parseInt(rgb[2]) + parseInt(rgb[3])) / 3;
+        if(avg > 150) return true;
+      }
+      return false;
+    }
+    
+    // Style images
+    pc.querySelectorAll('img').forEach(function(img) {
+      img.style.cssText = 'max-width:100%!important;height:auto!important;border-radius:10px!important;margin:12px 0!important;display:block!important;';
+    });
+    
+    // Style all elements with inline styles
+    pc.querySelectorAll('*').forEach(function(el) {
+      var style = el.getAttribute('style');
+      if(!style) return;
+      
+      var needsColorFix = false;
+      var needsBgFix = false;
+      
+      // Check for dark text colors that won't be visible
+      if(/color\s*:\s*(#[0-3][0-9a-f]|black|rgb\(0\s*,|rgb\(\s*0\s*,\s*0\s*,\s*0\s*\))/i.test(style)) {
+        needsColorFix = true;
+      }
+      
+      // Check for light backgrounds that might affect readability
+      if(/background(?:-color)?\s*:\s*(#[e-f][0-9a-f]{2}|white|rgb\(255\s*,|rgb\(\s*25[0-5]\s*,\s*25[0-5]\s*,\s*25[0-5]\s*\))/i.test(style)) {
+        needsBgFix = true;
+      }
+      
+      // Apply fixes
+      if(needsColorFix) {
+        el.style.color = '#F5F6FA';
+      }
+      if(needsBgFix) {
+        el.style.backgroundColor = 'transparent';
+        el.style.background = 'transparent';
+      }
+    });
+    
+    // Style links
+    pc.querySelectorAll('a').forEach(function(a) {
+      var currentColor = window.getComputedStyle(a).color;
+      // Only change if it's a dark color
+      if(isDarkColor(currentColor) || isDarkColor(a.style.color)) {
+        a.style.color = '#00E676';
+      }
+      a.style.textDecoration = 'none';
+      a.style.fontWeight = '600';
+      if(a.href.includes('naijaxnet.blogspot.com') && a.href.includes('.html')) {
+        a.onclick = function(e) { e.preventDefault(); openPostByUrl(this.href); };
+      }
+    });
+    
+    // Style headings
+    pc.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(function(h) {
+      h.style.color = '#F5F6FA';
+      h.style.fontWeight = '800';
+      h.style.margin = '20px 0 12px';
+      h.style.lineHeight = '1.4';
+    });
+    
+    // Style paragraphs, divs, spans
+    pc.querySelectorAll('p,div,span').forEach(function(el) {
+      var computedColor = window.getComputedStyle(el).color;
+      // If element has dark text color, make it light
+      if(isDarkColor(computedColor) || isDarkColor(el.style.color)) {
+        // Check if it's a special element (colored text for emphasis)
+        var tagName = el.tagName.toLowerCase();
+        var parentTag = el.parentElement ? el.parentElement.tagName.toLowerCase() : '';
+        
+        // Preserve styled/colored text by adapting to similar bright color
+        var originalColor = el.style.color || computedColor;
+        if(originalColor.includes('red') || originalColor.includes('#f00') || originalColor.includes('rgb(255,0')) {
+          el.style.color = '#FF6B6B'; // Light red
+        } else if(originalColor.includes('blue') || originalColor.includes('#00f') || originalColor.includes('rgb(0,0,255')) {
+          el.style.color = '#4dabf7'; // Light blue
+        } else if(originalColor.includes('green') || originalColor.includes('#0f0') || originalColor.includes('rgb(0,255')) {
+          el.style.color = '#00E676'; // Green (matches theme)
+        } else if(originalColor.includes('yellow') || originalColor.includes('#ff0')) {
+          el.style.color = '#FFD60A'; // Yellow (matches theme)
+        } else if(originalColor.includes('orange') || originalColor.includes('#ffa500')) {
+          el.style.color = '#FF9F0A'; // Orange (matches theme)
+        } else if(originalColor.includes('purple') || originalColor.includes('#800080')) {
+          el.style.color = '#BF5AF2'; // Purple (matches theme)
+        } else {
+          el.style.color = '#9B9EAD'; // Default light gray
+        }
+      }
+      
+      // Fix background colors
+      var computedBg = window.getComputedStyle(el).backgroundColor;
+      if(computedBg && computedBg !== 'rgba(0, 0, 0, 0)' && computedBg !== 'transparent') {
+        // If it has a light background, make it transparent or dark
+        if(computedBg.includes('255') || computedBg.includes('rgb(255') || computedBg.includes('#fff')) {
+          el.style.backgroundColor = 'transparent';
+        }
+      }
+    });
+    
+    // Style lists
+    pc.querySelectorAll('ul,ol').forEach(function(list) {
+      list.style.color = '#9B9EAD';
+      list.style.margin = '12px 0 12px 20px';
+      list.style.paddingLeft = '0';
+    });
+    
+    pc.querySelectorAll('li').forEach(function(li) {
+      li.style.color = '#9B9EAD';
+      li.style.marginBottom = '6px';
+    });
+    
+    // Style strong/bold
+    pc.querySelectorAll('strong,b').forEach(function(b) {
+      b.style.color = '#F5F6FA';
+      b.style.fontWeight = '700';
+    });
+    
+    // Style em/italic
+    pc.querySelectorAll('em,i').forEach(function(em) {
+      em.style.color = '#9B9EAD';
+      em.style.fontStyle = 'italic';
+    });
+    
+    // Style code/pre blocks
+    pc.querySelectorAll('code,pre').forEach(function(code) {
+      code.style.backgroundColor = '#1C1E27';
+      code.style.color = '#00E676';
+      code.style.padding = '2px 6px';
+      code.style.borderRadius = '4px';
+      code.style.fontFamily = 'monospace';
+      code.style.fontSize = '13px';
+    });
+    
+    // Style tables
+    pc.querySelectorAll('table').forEach(function(table) {
+      table.style.width = '100%';
+      table.style.borderCollapse = 'collapse';
+      table.style.margin = '16px 0';
+      table.style.fontSize = '12px';
+      table.style.color = '#9B9EAD';
+    });
+    
+    pc.querySelectorAll('th').forEach(function(th) {
+      th.style.backgroundColor = '#1C1E27';
+      th.style.color = '#F5F6FA';
+      th.style.fontWeight = '700';
+      th.style.padding = '10px';
+      th.style.border = '1px solid rgba(255,255,255,0.06)';
+      th.style.textAlign = 'left';
+    });
+    
+    pc.querySelectorAll('td').forEach(function(td) {
+      td.style.padding = '8px 10px';
+      td.style.border = '1px solid rgba(255,255,255,0.06)';
+      td.style.color = '#9B9EAD';
+    });
+    
+    // Style blockquotes
+    pc.querySelectorAll('blockquote').forEach(function(bq) {
+      bq.style.borderLeft = '3px solid #00E676';
+      bq.style.paddingLeft = '12px';
+      bq.style.margin = '16px 0';
+      bq.style.fontStyle = 'italic';
+      bq.style.color = '#9B9EAD';
+    });
+    
+    // Style horizontal rules
+    pc.querySelectorAll('hr').forEach(function(hr) {
+      hr.style.border = 'none';
+      hr.style.borderTop = '1px solid rgba(255,255,255,0.06)';
+      hr.style.margin = '20px 0';
+    });
+    
+    // Final pass: any remaining elements with dark text
+    pc.querySelectorAll('*').forEach(function(el) {
+      var computed = window.getComputedStyle(el);
+      var color = computed.color;
+      // Check if color is too dark to see on dark background
+      var rgb = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if(rgb) {
+        var avg = (parseInt(rgb[1]) + parseInt(rgb[2]) + parseInt(rgb[3])) / 3;
+        if(avg < 80) { // Too dark
+          el.style.color = '#9B9EAD';
+        }
+      }
+    });
+  }, 100);
+}
+
+function renderCommentItem(comment) {
+  return '<div class="comment-item">' +
+    '<div class="comment-header">' +
+    '<div class="comment-avatar">👤</div>' +
+    '<div class="comment-author-info">' +
+    '<div class="comment-author">' + escapeHtml(comment.author) + '</div>' +
+    '<div class="comment-time">' + comment.date + ' · ' + comment.time + '</div>' +
+    '</div></div>' +
+    '<div class="comment-text">' + escapeHtml(comment.text) + '</div>' +
+    '</div>';
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function toggleCommentForm(postId) {
+  var form = document.getElementById('comment-form-' + postId);
+  if(form) form.classList.toggle('show');
+}
+
+function submitComment(postId) {
+  var name = document.getElementById('comment-name-' + postId).value.trim();
+  var text = document.getElementById('comment-text-' + postId).value.trim();
+  
+  if(!name || !text) {
+    alert('Please enter your name and comment');
+    return;
+  }
+  
+  var now = new Date();
+  var comment = {
+    author: name,
+    text: text,
+    date: now.toLocaleDateString('en-NG', {day:'numeric',month:'short',year:'numeric'}),
+    time: now.toLocaleTimeString('en-NG', {hour:'numeric',minute:'2-digit'})
+  };
+  
+  if(!_postComments[postId]) _postComments[postId] = [];
+  _postComments[postId].push(comment);
+  
+  var list = document.getElementById('comments-list-' + postId);
+  var count = document.getElementById('comment-count-' + postId);
+  
+  if(list) {
+    if(_postComments[postId].length === 1) list.innerHTML = '';
+    list.innerHTML += renderCommentItem(comment);
+  }
+  if(count) count.textContent = _postComments[postId].length;
+  
+  document.getElementById('comment-name-' + postId).value = '';
+  document.getElementById('comment-text-' + postId).value = '';
+  toggleCommentForm(postId);
+}
+
+function showPostError(url) {
+  document.getElementById('post-reader-body').innerHTML = 
+    '<div style="padding:60px 20px;text-align:center;">' +
+    '<div style="font-size:48px;margin-bottom:16px;">😕</div>' +
+    '<div style="font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px;">Post Not Found</div>' +
+    '<div style="font-size:13px;color:var(--sub);margin-bottom:16px;">This post may have been moved or deleted.</div>' +
+    '<button onclick="closePost()" style="background:var(--green);color:#000;font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;margin-right:10px;">Go Back</button>' +
+    '<button onclick="window.open(\'' + url + '\',\'_blank\')" style="background:var(--bg3);border:1px solid var(--border);color:var(--white);font-size:13px;font-weight:700;padding:10px 22px;border-radius:10px;">Open in Browser</button>' +
+    '</div>';
+}
+
+function closePost() {
+  document.getElementById('post-reader').style.display = 'none';
+}
+
+function sharePost() {
+  if(navigator.share && _currentPostUrl) {
+    navigator.share({ title: document.getElementById('post-reader-title-bar').textContent, url: _currentPostUrl });
+  }
+}
+
+// ── SEARCH ──
+function handleAppSearch(query) {
+  var results = document.getElementById('searchResults');
+  var trending = document.getElementById('trending-searches');
+  
+  if(!query.trim()) {
+    results.classList.remove('show');
+    if(trending) trending.style.display = 'block';
+    return;
+  }
+  
+  if(trending) trending.style.display = 'none';
+  
+  var filtered = _allPosts.filter(function(p) {
+    return p.title.toLowerCase().includes(query.toLowerCase()) ||
+           p.labels.some(function(l) { return l.toLowerCase().includes(query.toLowerCase()); });
+  });
+  
+  results.innerHTML = filtered.slice(0, 10).map(function(post) {
+    return '<div class="post-v-item" onclick="openPostByUrl(\'' + post.url + '\')">' +
+      '<div class="pvi-icon">' + post.emoji + '</div>' +
+      '<div class="pvi-body"><div class="pvi-cat">' + post.category + '</div><div class="pvi-title">' + post.title + '</div><div class="pvi-meta">' + post.date + '</div></div>' +
+      '<div class="pvi-arrow">›</div></div>';
+  }).join('');
+  
+  results.classList.add('show');
+}
+
+function quickAppSearch(term) {
+  document.getElementById('searchField').value = term;
+  handleAppSearch(term);
+}
+
+function clearAppSearch() {
+  document.getElementById('searchField').value = '';
+  document.getElementById('searchResults').classList.remove('show');
+  var trending = document.getElementById('trending-searches');
+  if(trending) trending.style.display = 'block';
+}
+
+// ── CHEAT POSTS ──
+function showCheatPost(network) {
+  var cheatPosts = {
+    'mtn': {title: 'KPN VPN Settings For MTN 0.0k — Full Guide 2026', content: '<h2>MTN 0.0k Free Browsing Cheat</h2><p>This configuration allows you to browse the internet for free on MTN Nigeria using KPN VPN.</p><h3>Requirements:</h3><ul><li>MTN SIM with zero airtime</li><li>KPN VPN App</li><li>Working config file</li></ul><h3>Settings:</h3><p>Server: mtn-ng.kpntunnel.com<br>Port: 8080<br>Payload: Custom HTTP</p><p><strong>Status:</strong> <span style="color:#00E676">✅ Working</span></p>'},
+    'glo': {title: 'Glo Free Browsing HTTP Injector Config 2026', content: '<h2>Glo Free Browsing Cheat</h2><p>Latest HTTP Injector configuration for Glo Nigeria free browsing.</p><h3>Requirements:</h3><ul><li>Glo SIM with zero airtime</li><li>HTTP Injector App</li><li>Config file</li></ul><p><strong>Status:</strong> <span style="color:#00E676">✅ Working</span></p>'},
+    'airtel': {title: 'Airtel Night Plan & Data Tweaks 2026', content: '<h2>Airtel Data Tweaks</h2><p>Latest Airtel Nigeria data tweaks and night plan cheats.</p><h3>Available Plans:</h3><ul><li>Night Plan: 1.5GB for N50</li><li>Social Bundle: 1GB for N100</li></ul><p><strong>Status:</strong> <span style="color:#FFD60A">🔄 Testing</span></p>'},
+    '9mobile': {title: '9Mobile VPN & Psiphon Settings 2026', content: '<h2>9Mobile Free Browsing</h2><p>VPN and Psiphon settings for 9Mobile Nigeria.</p><h3>Requirements:</h3><ul><li>9Mobile SIM</li><li>Psiphon Pro or any VPN</li></ul><p><strong>Status:</strong> <span style="color:#FFD60A">🔄 Testing</span></p>'}
+  };
+  
+  var post = cheatPosts[network];
+  if(!post) return;
+  
+  var reader = document.getElementById('post-reader');
+  var body = document.getElementById('post-reader-body');
+  var titleBar = document.getElementById('post-reader-title-bar');
+  
+  titleBar.textContent = post.title;
+  
+  var html = '<div class="post-header">';
+  html += '<div class="post-label hot">HOT</div>';
+  html += '<h1 class="post-title">' + post.title + '</h1>';
+  html += '<div class="post-meta">';
+  html += '<span class="author">✍️ Whyteman Harrison</span>';
+  html += '<span>📅 ' + new Date().toLocaleDateString('en-NG', {day:'numeric',month:'short',year:'numeric'}) + '</span>';
+  html += '</div></div>';
+  html += '<div class="post-content">' + post.content + '</div>';
+  
+  body.innerHTML = html;
+  reader.style.display = 'block';
+  reader.scrollTop = 0;
+}
+
+// ── NETWORK FILTER ──
+function filterNet(net, el) {
+  document.querySelectorAll('.ntab').forEach(function(t) { t.classList.remove('active'); });
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.cheat-full-card').forEach(function(c) {
+    c.style.display = (net === 'all' || c.dataset.net === net) ? 'block' : 'none';
+  });
+}
+
+// ── INITIALIZE ──
+setTimeout(initHomeScreen, 1500);
+</script>
+</body>
+</html>
