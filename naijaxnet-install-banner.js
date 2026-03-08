@@ -48,7 +48,7 @@
 
     // Install → opens GitHub PWA page in new tab
     document.getElementById('nxn-get').onclick = function() {
-      window.open('https://whyteman91.github.io/naijaxnet/', '_blank');
+      window.open('https://whyteman91.github.io/Naijaxnet-App/', '_blank');
       dismiss();
     };
     document.getElementById('nxn-cls').onclick = dismiss;
